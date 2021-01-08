@@ -16,7 +16,7 @@ I figured it could be useful for others so here we are.
 It uses a SQL backend for handling the tasks and the status of the tasks. 
 Tested on MySQL only. 
 
-It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.
+It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.    
 **Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication. 
 
 
