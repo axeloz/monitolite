@@ -65,3 +65,4 @@ I rewrote a couple of things today to make sure the script still works.
  * Raise alert when tasks are not run at the correct frequency (CRON down or other reason)
  * Set a notification capping limit to prevent many notifications to be sent in case of an up-and-down host
  * Add a notification history log
+ * Keep track of tasks response time
