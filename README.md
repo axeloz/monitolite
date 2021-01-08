@@ -17,6 +17,8 @@ It uses a SQL backend for handling the tasks and the status of the tasks.
 Tested on MySQL only. 
 
 It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.
+**Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication. 
+
 
 I rewrote a couple of things today to make sure the script still works. 
 
@@ -58,6 +60,7 @@ I rewrote a couple of things today to make sure the script still works.
  * Multithreading
  * SMS Notifications
  * Better dashboard
+ * Protected backend with authentication
  * Create an installation script
  * Raise alert when tasks are not run at the correct frequency (CRON down or other reason)
  * Set a notification capping limit to prevent many notifications to be sent in case of an up-and-down host
