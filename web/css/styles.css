@@ -32,10 +32,11 @@ h3 {
 
 h1, h2, h3, h4 {
   margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 img {
-  vertical-align: baseline;
+  vertical-align: sub;
 }
 
 table {
@@ -69,8 +70,17 @@ td {
   margin: 3rem auto;
   max-width: 80%;
   padding: 1rem;
-  -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
-  box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
+  -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
+  box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
 
+}
+
+.highlight {
+  background-color: #000;
+  padding: 0px 1rem;
+  display: inline-block;
+  color: #FFF;
+  font-size: 1rem;
+  vertical-align: middle;
 }

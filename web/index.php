@@ -7,14 +7,14 @@
 	</head>
 
 	<body>
-		<h1>MonitoLite dashboard interface</h1>	
+		<h1>MonitoLite Dashboard</h1>	
 		
 		<?php if ($tasks = $db->get_all_tasks()): ?>
 		
 			<?php foreach ($tasks as $task): ?>
 
 				<div id="task">
-					<h2>Task <small>#</small><?php echo $task['id']; ?> » <i>"<?php echo $task['type']; ?>"</i> for host <i>"<?php echo $task['host']; ?>"</i></h2>
+					<h2>Task <small>#</small><?php echo $task['id']; ?> » <span class="highlight"><?php echo $task['type']; ?></span> for host <span class="highlight"><?php echo $task['host']; ?></span></h2>
 
 					<table id="tasks_tbl">
 						<thead>
@@ -47,8 +47,7 @@
 				
 				
 					<div id="history">
-						<h3>Task's history</h3>
-						<p>Only the 5 last history entries are displayed</p>
+						<h3>Task history</h3>
 						<?php if ($histories = $db->get_all_history($task['id'], 5)): ?>
 							<table id="history_tbl">
 								<thead>
@@ -69,13 +68,14 @@
 								<?php endforeach; ?>
 								</tbody>
 							</table>
+							<p><small>Only the 5 last history entries are displayed</small></p>
 						<?php else: ?>
 							<p class="no_result">No history found here</p>
 						<?php endif; ?>	
 					</div>		
 					
 					<div id="contacts">
-						<h3>Task's contacts</h3>
+						<h3>Task contacts</h3>
 						
 						<?php if ($contacts = $db->get_all_contacts($task['id'])): ?>
 							<table id="contacts_tbl">
