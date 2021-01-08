@@ -19,27 +19,34 @@
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
-								<th>Host</th>
-								<th>Type</th>
-								<th>Parameters</th>
-								<th>Creation date</th>
-								<th>Frequency (min)</th>
-								<th>Last execution</th>
-								<th>Active</th$query>
+								<th width="5%">&nbsp;</th>
+								<th width="*">Host</th>
+								<th width="5%">Type</th>
+								<th width="10%">Parameters</th>
+								<th width="20%">Creation date</th>
+								<th width="10%">Frequency (min)</th>
+								<th width="5%">Active</th$query>
 							</tr>
 						</thead>
 						<tbody>
 						<?php 
 							$status = $db->get_task_last_status($task['id']);
 							$color = $status == 1 ? '#c9ecc9' : '#ffc5c5'; 
+							$icon = $status == 1 ? 'up.png': 'down.png';
 						?>
 						<tr>
-							<td><?php echo $task['host']; ?></td>
-							<td><?php echo $task['type']; ?></td>
+							<td style="background-color: <?php echo $color; ?>"><img src="img/<?php echo $icon; ?>" width="16" alt="Status" /></td>
+							<td style="background-color: <?php echo $color; ?>"><?php echo $task['host']; ?></td>
+							<td>
+								<?php if ($task['type'] == 'http'): ?>
+									<img src="img/http.png" width="16" alt="Warning" title="Type: <?php echo $task['type']; ?>"/>
+								<?php elseif ($task['type'] == 'ping'): ?>
+									<img src="img/ping.png" width="16" alt="Warning" title="Type: <?php echo $task['type']; ?>"/>
+								<?php endif; ?>
+							</td>
 							<td><?php echo $task['params']; ?></td>
 							<td><?php echo $task['creation_date']; ?></td>
 							<td><?php echo ($task['frequency'] / 60); ?></td>
-							<td style="background-color: <?php echo $color; ?>"><?php echo $task['last_execution']; ?></td>
 							<td><?php echo ($task['active'] == 1) ? 'Yes' : 'No'; ?></td>
 						</tr>
 						</tbody>
@@ -63,12 +70,21 @@
 									?>
 									<tr>
 										<td width="20%" align="center"><?php echo $history['datetime']; ?></td>
-										<td width="20%" align="center" style="background-color:<?php echo $color; ?>"><?php echo $history['status'] == 1 ? 'SUCCESS' : 'ERROR'; ?></td>
+
+										<?php if ($history['status'] == 1): ?>
+											<td width="20%" align="center" style="background-color:#c9ecc9;">
+												<img src="img/success.png" width="16" alt="Success">&nbsp;SUCCESS
+											</td>
+										<?php else: ?>
+											<td width="20%" align="center" style="background-color:#ffc5c5;">
+												<img src="img/error.png" width="16" alt="Success">&nbsp;ERROR
+											</td>
+										<?php endif; ?>
 									</tr>
 								<?php endforeach; ?>
 								</tbody>
 							</table>
-							<p><small>Only the 5 last history entries are displayed</small></p>
+							<p><small>Only the 5 latest entries are displayed</small></p>
 						<?php else: ?>
 							<p class="no_result">No history found here</p>
 						<?php endif; ?>	
@@ -81,7 +97,6 @@
 							<table id="contacts_tbl">
 								<thead>
 									<tr>
-										<th>#</th>
 										<th>Surname</th>
 										<th>Firstname</th>
 										<th>Email</th>
@@ -93,20 +108,19 @@
 								<tbody>
 								<?php foreach ($contacts as $contact): ?>
 									<tr>
-										<td><?php echo $contact['id']; ?></td>
-										<td><?php echo $contact['surname']; ?></td>
-										<td><?php echo $contact['firstname']; ?></td>
-										<td><?php echo $contact['email']; ?></td>
-										<td><?php echo $contact['phone']; ?></td>
-										<td><?php echo $contact['creation_date']; ?></td>
-										<td><?php echo ($contact['active'] == 1) ? 'Yes' : 'No'; ?></td>
+										<td width="15%"><?php echo $contact['surname']; ?></td>
+										<td width="15%"><?php echo $contact['firstname']; ?></td>
+										<td width="20%"><?php echo $contact['email']; ?></td>
+										<td width="15%"><?php echo $contact['phone']; ?></td>
+										<td width="15%"><?php echo $contact['creation_date']; ?></td>
+										<td width="15%"><?php echo ($contact['active'] == 1) ? 'Yes' : 'No'; ?></td>
 									</tr>
 								<?php endforeach; ?>
 								</tbody>
 							</table>
 						<?php else: ?>
 							<p class="no_result">
-								<img src="img/warning.png" width="20" alt="Warning"/>
+								<img src="img/warning.png" width="16" alt="Warning"/>
 								No contact found here. That means that nobody will get any notification in case of an error.
 							</p>
 						<?php endif; ?>
