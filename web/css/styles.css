@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+	padding: 10px;
+	font-family: 'Hind', sans-serif;
+	font-size: 1rem;
+	color: #3D3D3D;
+}
+
+h1 {
+  font-size: 2.4rem;
+  text-align: center;
+  margin: 3rem 0;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 2rem;
+}
+
+img {
+  vertical-align: baseline;
+}
+
+table {
+	  border: 1px solid #ABC;
+	  font-size: 14px;
+	  border-spacing : 0;
+    border-collapse : collapse;
+}
+
+th {
+  background-color: #e6EEEE;
+  border: 1px solid #9ccece;
+  padding: 0.3rem;
+}
+
+td {
+  color: #3D3D3D;
+  padding: 0.3rem;
+  background-color: #FFF;
+  vertical-align: top;
+  border: 1px solid #9ccece;
+  text-align: center;
+  
+}
+
+#tasks_tbl, #contacts_tbl {
+  width: 100%;
+}
+
+#task {
+  margin: 3rem auto;
+  max-width: 80%;
+  padding: 1rem;
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+  box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+
+}
