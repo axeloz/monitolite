@@ -17,6 +17,11 @@ It comes with a very straightforward dashboard written in PHP.
 
 I rewrote a couple of things today to make sure the script still works. 
 
+## Screenshot 
+
+![screenshot](https://github.com/axeloz/monitolite/raw/main/screenshot.png "Logo")
+
+
 ## Requirements
 
 * Perl 
@@ -38,4 +43,10 @@ I rewrote a couple of things today to make sure the script still works.
  * when everything works, you may create a CRON `* * * * * cd <change/this/to/the/correct/path> && /usr/bin/perl monitolite.pl > /dev/null`
  
  
- MORE INFORMATION COMING SOON. 
+## MORE INFORMATION COMING SOON. 
+
+## TODO
+
+ * Make CRUD possible from the backend
+ * Multithreading
+ * SMS Notifications
