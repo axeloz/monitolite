@@ -83,3 +83,4 @@ I rewrote a couple of things today to make sure the script still works.
  * Set a notification capping limit to prevent many notifications to be sent in case of an up-and-down host
  * Add a notification history log
  * Keep track of tasks response time
+ * Daemonize the script (instead of CRONs)
