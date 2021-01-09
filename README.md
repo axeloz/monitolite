@@ -29,7 +29,7 @@ I rewrote a couple of things today to make sure the script still works.
 
 ## Requirements
 
-* Perl : with DBI, Dotenv, Net::Ping, MIME::Lite, LWP::Agent, LWP::UserAgent
+* Perl : with DBI, Dotenv, Net::Ping, Email::MIME, Email::Sender::Simple, Email::Sender::Transport::SMTP, LWP::Simple, LWP::UserAgent, LWP::Protocol::https
 * a MTA: Postfix, ... 
 * PHP 7+ (optional): with PDO
 * a webserver (optional): Apache, Nginx, ...
