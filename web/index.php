@@ -28,7 +28,7 @@
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
-								<th width="5%">&nbsp;</th>
+								<th width="5%">Up?</th>
 								<th width="*">Host</th>
 								<th width="5%">Type</th>
 								<th width="10%">Parameters</th>

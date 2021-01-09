@@ -18,12 +18,12 @@ use DBI;
 use Dotenv;
 use Net::Ping;
 
-use MIME::Lite;
+use Email::MIME;
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP qw();
+
 use LWP::Simple;
-use MIME::Base64;
-use Authen::SASL;
 use LWP::UserAgent;
-use IO::Socket::SSL;
 use LWP::Protocol::https;
 
 my $query;
@@ -63,6 +63,7 @@ my $smtp_user				= $ENV{'SMTP_USER'};
 my $smtp_password			= $ENV{'SMTP_PASSWORD'};
 my $smtp_port				= $ENV{'SMTP_PORT'};
 my $smtp_ssl				= $ENV{'SMTP_SSL'};
+
 
 
 ############################
@@ -302,16 +303,35 @@ sub send_notifications {
 	if ($query->execute()) {
 		while ($emails = $query->fetchrow_hashref()) {
 
-			my $email = new MIME::Lite
-			  		From 	=> 'axel@mabox.eu',
-					To	=> 'axel@mabox.eu',
-					Subject	=> 'Bla',
-					Type 	=> 'TEXT',
-					Data	=> 'Hello';
+			my $email = Email::MIME->create(
+			    header_str => [
+				From 		=> $email_from,
+				To   		=> $emails->{'email'},
+				Subject		=> $subject
+			    ],
+			    parts => [
+					$datas
+			    ],
+			);
 			eval {
-				$email->send('smtp', $smtp_host, Timeout=>5, Auth=>'LOGIN', AuthUser=>$smtp_user, AuthPass=>$smtp_password, Port=>$smtp_port, SSL=>$smtp_ssl, Debug=>0) or output('failed to send notification to ' . $emails->{'email'} . ' (' . $email->error() . ')', 'ERROR');;
+				sendmail(
+					$email,
+					{
+						from => $email_from,
+						transport => Email::Sender::Transport::SMTP->new({
+							  host => $smtp_host,
+							  port => $smtp_port,
+							  sasl_username => $smtp_user,
+							  sasl_password => $smtp_password,
+							  ssl => $smtp_ssl,
+							  timeout => 10
+						})
+					}
+				);
+
+				output('Notification email was sent to '.$emails->{'email'}, 'DEBUG');
 			};
-			warn() if $@;
+			warn $@ if $@;
 		}
 		return 1
 	}
