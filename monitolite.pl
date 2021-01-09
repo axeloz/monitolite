@@ -308,8 +308,10 @@ sub send_notifications {
 					Subject	=> 'Bla',
 					Type 	=> 'TEXT',
 					Data	=> 'Hello';
-			$email->send('smtp', $smtp_host, Timeout=>5, Auth=>'LOGIN', AuthUser=>$smtp_user, AuthPass=>$smtp_password, Port=>$smtp_port, SSL=>$smtp_ssl, Debug=>0) or output('failed to send notification to ' . $emails->{'email'} . ' (' . $email->error() . ')', 'ERROR');;
-
+			eval {
+				$email->send('smtp', $smtp_host, Timeout=>5, Auth=>'LOGIN', AuthUser=>$smtp_user, AuthPass=>$smtp_password, Port=>$smtp_port, SSL=>$smtp_ssl, Debug=>0) or output('failed to send notification to ' . $emails->{'email'} . ' (' . $email->error() . ')', 'ERROR');;
+			};
+			warn() if $@;
 		}
 		return 1
 	}
