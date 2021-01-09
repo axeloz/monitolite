@@ -70,16 +70,18 @@ td {
   width: 100%;
 }
 
-#task {
+.task {
   margin: 3rem auto;
-  max-width: 80%;
+  max-width: 1000px;
   padding: 1rem;
   -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
   -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
   box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
   border-radius: 5px;
-
+  position: relative;
 }
+
+
 
 .highlight {
   background-color: #000;
@@ -88,4 +90,54 @@ td {
   color: #FFF;
   font-size: 1rem;
   vertical-align: middle;
+}
+
+.hidden {
+  display: none;
+}
+
+.task.show .task-overlay {
+  display: none;
+}
+
+.exp-icon {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 20px;
+  min-height: 27px;
+  height: 27px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+   animation-iteration-count: 3;
+   animation-delay: 3s;
+}
+
+.task .exp-icon {
+  background-image: url('../img/expand.png');
+}
+
+.task.active .exp-icon {
+  background-image: url('../img/collapse.png');
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
