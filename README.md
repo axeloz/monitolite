@@ -52,6 +52,23 @@ I rewrote a couple of things today to make sure the script still works.
  * when everything works, you may create a CRON `* * * * * cd <change/this/to/the/correct/path> && /usr/bin/perl monitolite.pl > /dev/null`
  
  
+## Settings
+
+* DB_TYPE=mysql
+* DB_HOST=127.0.0.1
+* DB_USER=vagrant
+* DB_PASSWORD=vagrant
+* DB_NAME=monitoring
+* DB_PORT=3306
+* SMTP_HOST=localhost
+* SMTP_USER=
+* SMTP_PASSWORD=
+* SMTP_PORT=80
+* SMTP_SSL=1
+* MAIL_FROM=axel@monitolite.fr
+* NB_TRIES=3
+* ARCHIVE_DAYS=10 
+ 
 ## MORE INFORMATION COMING SOON. 
 
 ## TODO
