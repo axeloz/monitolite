@@ -17,9 +17,14 @@ use strict;
 use DBI;
 use Dotenv;
 use Net::Ping;
+
 use MIME::Lite;
 use LWP::Simple;
+use MIME::Base64;
+use Authen::SASL;
 use LWP::UserAgent;
+use IO::Socket::SSL;
+use LWP::Protocol::https;
 
 my $query;
 my $result;
@@ -53,6 +58,11 @@ my $password 				= $ENV{'DB_PASSWORD'};
 my $email_from 				= $ENV{'MAIL_FROM'};
 my $number_tries 			= $ENV{'NB_TRIES'};
 my $days_history_archive 		= $ENV{'ARCHIVE_DAYS'};
+my $smtp_host				= $ENV{'SMTP_HOST'};
+my $smtp_user				= $ENV{'SMTP_USER'};
+my $smtp_password			= $ENV{'SMTP_PASSWORD'};
+my $smtp_port				= $ENV{'SMTP_PORT'};
+my $smtp_ssl				= $ENV{'SMTP_SSL'};
 
 
 ############################
@@ -184,7 +194,10 @@ sub check_http {
 
 	$host = 'http://'.$host if ($host !~ m/^http/i);
 	
-	my $check = LWP::UserAgent->new;
+	my $check = LWP::UserAgent->new(
+		ssl_opts => { verify_hostname => 0 },
+		protocols_allowed => ['http', 'https']
+	);
 	$check->timeout(5);
 	$check->env_proxy;
 
@@ -211,6 +224,7 @@ sub check_http {
 		
 	}
 	else {
+		output('HTTP response error was: '.$response->status_line, 'DEBUG');
 		if ($number_tries && $round < $number_tries) {
 			sleep (2);
 			return check_http($host, $find, $round + 1);
@@ -287,17 +301,15 @@ sub send_notifications {
 	my $query = $dbh->prepare('SELECT c.email FROM contacts as c JOIN notifications as n ON (n.contact_id = c.id) WHERE c.active = 1 AND n.task_id = '.$task_id);
 	if ($query->execute()) {
 		while ($emails = $query->fetchrow_hashref()) {
-			my $email = new MIME::Lite 
-			  		From 	=> $email_from, 
-					To	=> $emails->{'email'}, 
-					Subject	=> $subject, 
-					Type 	=> 'TEXT', 
-					Data	=> $datas;
-			if ($email->send) {
-				output('sending notification to: ' . $emails->{'email'}, 'DEBUG');
-			} else {
-				output('failed to send notification to ' . $emails->{'email'} . ' (' . $email->error() . ')', 'ERROR');
-			}	
+
+			my $email = new MIME::Lite
+			  		From 	=> 'axel@mabox.eu',
+					To	=> 'axel@mabox.eu',
+					Subject	=> 'Bla',
+					Type 	=> 'TEXT',
+					Data	=> 'Hello';
+			$email->send('smtp', $smtp_host, Timeout=>5, Auth=>'LOGIN', AuthUser=>$smtp_user, AuthPass=>$smtp_password, Port=>$smtp_port, SSL=>$smtp_ssl, Debug=>0) or output('failed to send notification to ' . $emails->{'email'} . ' (' . $email->error() . ')', 'ERROR');;
+
 		}
 		return 1
 	}
