@@ -196,7 +196,7 @@ sub check_http {
 	$host = 'http://'.$host if ($host !~ m/^http/i);
 	
 	my $check = LWP::UserAgent->new(
-		ssl_opts => { verify_hostname => 0 },
+		ssl_opts => { verify_hostname => 1 },
 		protocols_allowed => ['http', 'https']
 	);
 	$check->timeout(5);
