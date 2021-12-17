@@ -34,11 +34,22 @@ class DB {
 	}
 
 
-	public function get_all_tasks() {
-		$query = '
-			SELECT id, host, type, params, creation_date, frequency, last_execution, active 
-			FROM tasks
-		';
+	public function get_all_tasks($status = null) {
+		if (is_null($status)) {
+			$query = '
+				SELECT id, host, type, params, creation_date, frequency, last_execution, active 
+				FROM tasks
+			';
+		}
+		else {
+			$query = '
+				SELECT DISTINCT t.id, t.host, t.type, t.params, t.creation_date, t.last_execution, t.active 
+				FROM tasks as t 
+				JOIN tasks_history as h ON (h.task_id = t.id)
+				WHERE h.status = '.intval($status).' AND h.datetime = t.last_execution
+			';
+		}
+		
 		return $this->query($query);
 	}
 
