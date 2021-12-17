@@ -18,7 +18,7 @@ class DB {
 		}
 	}
 	
-	function get_all_contacts($task = null) {
+	public function get_all_contacts($task = null) {
 		$query = '
 			SELECT c.id, c.surname, c.firstname, c.email, c.phone, c.creation_date, c.active 
 			FROM contacts c 
@@ -33,7 +33,7 @@ class DB {
 	}
 
 
-	function get_all_tasks() {
+	public function get_all_tasks() {
 		$query = '
 			SELECT id, host, type, params, creation_date, frequency, last_execution, active 
 			FROM tasks
@@ -41,7 +41,7 @@ class DB {
 		return $this->query($query);
 	}
 
-	function get_all_history($task = null, $limit = 100) {
+	public function get_all_history($task = null, $limit = 100) {
 		$args = [
 			':limit'	=> $limit
 		];
@@ -60,7 +60,7 @@ class DB {
 		return $this->query($query, $args);
 	}
 	
-	function get_task_last_status($task) {
+	public function get_task_last_status($task) {
 		$result = $this->query('SELECT t.id, th.status FROM tasks_history th JOIN tasks t ON (th.task_id = t.id) WHERE t.id = :task ORDER BY datetime DESC LIMIT 1', [':task' => $task]);
 		foreach ($result as $r) {
 			return $r['status'];
@@ -68,7 +68,7 @@ class DB {
 	}
 
 
-	function query($query, $args = null) {
+	public function query($query, $args = null) {
 
 		if (! $result = $this->link->prepare($query)) {
 			throw new DatabaseException('Cannot prepare query ('.$query.') for execution');
