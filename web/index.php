@@ -32,7 +32,7 @@
 								<th width="*">Host</th>
 								<th width="5%">Type</th>
 								<th width="10%">Parameters</th>
-								<th width="20%">Creation date</th>
+								<th width="20%">Last execution</th>
 								<th width="10%">Frequency (min)</th>
 								<th width="5%">Active</th$query>
 							</tr>
@@ -54,7 +54,7 @@
 								<?php endif; ?>
 							</td>
 							<td><?php echo $task['params']; ?></td>
-							<td><?php echo $task['creation_date']; ?></td>
+							<td><?php echo $task['last_execution']; ?></td>
 							<td><?php echo ($task['frequency'] / 60); ?></td>
 							<td><?php echo ($task['active'] == 1) ? 'Yes' : 'No'; ?></td>
 						</tr>
