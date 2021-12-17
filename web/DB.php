@@ -15,6 +15,7 @@ class DB {
 		if (! is_resource($this->link)) {
 			$dsn = $_ENV['DB_TYPE'].':dbname='.$_ENV['DB_NAME'].';host='.$_ENV['DB_HOST'].';port='.$_ENV['DB_PORT'];
 			$this->link = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
+			$this->link->query('SET NAMES "UTF8"');
 		}
 	}
 	
