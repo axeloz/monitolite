@@ -16,9 +16,18 @@ body {
 	color: #3D3D3D;
 }
 
+a, a:visited {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 h1, h2, h3, h4 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: .8rem;
+  margin-bottom: .8rem;
 }
 
 h1 {
@@ -28,7 +37,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   margin-top: 0;
   padding-top: 0;
 }
@@ -63,12 +72,53 @@ td {
   border: 1px solid #9ccece;
   text-align: center;
   vertical-align: middle;
-  
+
 }
 
 #tasks_tbl, #contacts_tbl {
   width: 100%;
 }
+
+.quick-view {
+  margin: 3rem auto;
+  max-width: 1000px;
+  padding: 1rem;
+  -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
+  -moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
+  box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  position: relative;
+}
+
+
+.new-group {
+  margin: .2rem;
+  display: inline-block;
+  border: 1px solid rgba(7, 7, 7, 0.432);
+  padding: 1px;
+
+}
+
+.quick-view .square {
+  width: 2rem;
+  min-width: 2rem;
+  max-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  max-height: 2rem;
+  margin: 0.1rem;
+  text-align: center;
+  vertical-align: middle;
+  float: left;
+}
+
+.spacer {
+  clear:both;
+  line-height: 0;
+  padding: 0;
+  margin:0;
+}
+
 
 .task {
   margin: 3rem auto;
@@ -122,6 +172,23 @@ td {
 
 .task.active .exp-icon {
   background-image: url('../img/collapse.png');
+}
+
+.up {
+  background-color: #c9ecc9;
+}
+
+.down {
+  background-color: #ffc5c5;
+}
+
+.unknown {
+  background-color: rgb(243, 192, 97);
+}
+
+
+.square.unknown img, .square.down img, .square.up img  {
+  opacity: .5;
 }
 
 @keyframes shake {
