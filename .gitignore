@@ -2,3 +2,4 @@ web/vendor/**/*
 .env
 web/sync.php
 /**/node_modules
+/**/dist
