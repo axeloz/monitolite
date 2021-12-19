@@ -101,10 +101,13 @@ html {
           color: #3D3D3D;
           padding: 0.3rem;
           background-color: #FFF;
-          vertical-align: top;
           border: 1px solid #9ccece;
           text-align: center;
           vertical-align: middle;
+
+          &.right {
+            text-align: right;
+          }
         }
 
         &#tasks_tbl, &#contacts_tbl {
@@ -124,7 +127,7 @@ html {
       overflow: hidden;
 
       .new-group {
-        margin: .1rem;
+        margin: .2rem;
         display: inline-block;
         border-radius: .4rem;
         overflow: hidden;
@@ -138,6 +141,7 @@ html {
           float: left;
           line-height: 1.2rem;
           min-width: 1.4rem;
+          padding: .2rem .6rem;
 
           &:not(:first-of-type) {
             border-left: 1px solid white;
@@ -182,6 +186,11 @@ html {
       font-size: 1rem;
       vertical-align: middle;
       border-radius: .5rem;
+      font-size: 0.8rem;
+    }
+
+    .small {
+      font-size: .8rem;
     }
 
     .hidden {

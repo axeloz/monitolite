@@ -46,7 +46,7 @@ class DB {
 				LEFT JOIN `tasks_history` as h ON (h.task_id = t.id)
 				LEFT JOIN `groups` as g ON (g.id = t.group_id)
 				WHERE (t.last_execution IS NULL OR h.datetime = t.last_execution)
-				ORDER BY group_id DESC
+				ORDER BY group_name ASC
 			';
 		}
 		else {

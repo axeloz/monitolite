@@ -18,7 +18,7 @@
 						:class="statusText(task.status)"
 						class="square"
 					>
-						&nbsp;
+						<span class="small">{{task.id }}</span>
 					</p>
 				</a>
 			</div>

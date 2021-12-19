@@ -6,8 +6,8 @@
 					<th width="5%">Up?</th>
 					<th width="*">Host</th>
 					<th width="5%">Type</th>
-					<th width="20%">Last execution</th>
-					<th width="20%">Frequency (min)</th>
+					<th width="20%">Last checked</th>
+					<th width="13%">Frequency (min)</th>
 					<th width="5%">Active</th>
 				</tr>
 			</thead>
@@ -19,7 +19,7 @@
 					<td :class="statusText(task.status)">
 						<img :src="'img/'+statusText(task.status)+'.png'" width="16" alt="Status" />
 					</td>
-					<td :class="statusText(task.status)">
+					<td>
 						<a :href="task.host" target="_blank">{{ task.host }}</a>
 					</td>
 					<td>

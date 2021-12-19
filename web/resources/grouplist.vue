@@ -8,7 +8,7 @@
 			<a :name="'group-'+group.id"></a>
 			<h3>
 				Tasks for group <span class="highlight">{{ group.name }} <small>(#{{ group.id }})</small></span>
-				<p class="context-menu"><img src="img/menu.svg" width="40" /></p>
+				<!-- <p class="context-menu"><img src="img/menu.svg" width="40" /></p> -->
 			</h3>
 
 			<div class="block-content">

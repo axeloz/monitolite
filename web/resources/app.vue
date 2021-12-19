@@ -9,8 +9,8 @@
 
 <script>
 
-    import QuickView from '../resources/quickview.vue'
     import GroupList from './grouplist.vue'
+    import QuickView from './quickview.vue'
 
     export default{
         components: {

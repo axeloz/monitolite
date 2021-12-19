@@ -1,28 +1,28 @@
 # MONITOLITE
 
-**MonitoLite** is an old project I recently dug up from my archives. I developed this script years ago for my personal needs. 
+**MonitoLite** is an old project I recently dug up from my archives. I developed this script years ago for my personal needs.
 I figured it could be useful for others so I **rewrote** and **updated** it from scratch in a modern way.
 
 
 ## What it does
 
-**MonitoLite** is a very simple monitoring tool developed in Perl. It supports : 
+**MonitoLite** is a very simple monitoring tool developed in Perl. It supports :
  * **ping monitoring**: sends a `ping` command to the specified host. Raises an alert if the host is down
  * **http monitoring**: requests the provided URL and raises an alert if the URL returns an error. Optionally you may specify a string to search on the page using the `param` database field. It raises an alert if the specified text could not be found on the page.
- 
- In case of an alert, the script sends an email notifications to the specified contacts (one or many). 
+
+ In case of an alert, the script sends an email notifications to the specified contacts (one or many).
  The script also sends a recovery email notification when the alert is over.
 
-It uses a SQL backend for handling the tasks and the status of the tasks. 
+It uses a SQL backend for handling the tasks and the status of the tasks.
 Tested on MySQL only but should support other SQL-based DBMS.
 
-It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.    
-**Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication. 
+It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.
+**Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication.
 
 
-I rewrote a couple of things today to make sure the script still works. 
+I rewrote a couple of things today to make sure the script still works.
 
-## Screenshot 
+## Screenshot
 
 ![screenshot](https://github.com/axeloz/monitolite/raw/main/screenshot.png "Logo")
 
@@ -30,7 +30,7 @@ I rewrote a couple of things today to make sure the script still works.
 ## Requirements
 
 * Perl : with DBI::MySQL, Dotenv, Net::Ping, Email::MIME, Email::Sender::Simple, Email::Sender::Transport::SMTP, LWP::Simple, LWP::UserAgent, LWP::Protocol::https
-* a MTA: Postfix, ... 
+* a MTA: Postfix, ...
 * PHP 7+ (optional): with PDO
 * a webserver (optional): Apache, Nginx, ...
 * a Database server: MySQL, other? (untested)
@@ -43,15 +43,17 @@ I rewrote a couple of things today to make sure the script still works.
  * clone this repo
  * install Perl dependencies
  * install PHP composer dependencies: `cd ./web && composer install`
+ * install Javascript dependencies: `cd ./web && npm install`
+ * compile the Javascript sources: `cd ./web && npx mix production`
  * create a Database and import the schema from `sql/create.sql`
- * create your own `.env` file: `cp .env.example .env` and adapt it to your needs 
+ * create your own `.env` file: `cp .env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `web` directory
  * add tasks and contacts into the database (no backend yet)
- * run the script: `perl monitolite.pl` 
- * check the web dashboard for results. 
+ * run the script: `perl monitolite.pl`
+ * check the web dashboard for results.
  * when everything works, you may create a CRON `* * * * * cd <change/this/to/the/correct/path> && /usr/bin/perl monitolite.pl > /dev/null`
- 
- 
+
+
 ## Settings
 
 * DB_TYPE=mysql
@@ -67,9 +69,9 @@ I rewrote a couple of things today to make sure the script still works.
 * SMTP_SSL=1
 * MAIL_FROM=axel@monitolite.fr
 * NB_TRIES=3
-* ARCHIVE_DAYS=10 
- 
-## MORE INFORMATION COMING SOON. 
+* ARCHIVE_DAYS=10
+
+## MORE INFORMATION COMING SOON.
 
 ## TODO
 
