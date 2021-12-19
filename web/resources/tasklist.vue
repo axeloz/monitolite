@@ -17,20 +17,20 @@
 					v-bind:key="task.id"
 				>
 					<td :class="statusText(task.status)">
-						<img :src="'img/'+statusText(task.status)+'.png'" width="16" alt="Status" />
+						<img :src="'img/'+statusText(task.status)+'.svg'" width="16" alt="Status" />
 					</td>
 					<td>
 						<a :href="task.host" target="_blank">{{ task.host }}</a>
 					</td>
 					<td>
-						<img :src="task.type == 'http' ? 'img/http.png' : 'img/ping.png'" width="16" alt="Type of check" :title="'Type: '+task.type" />
+						<img :src="task.type == 'http' ? 'img/http.svg' : 'img/ping.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
 					</td>
 					<td>
 						<span
 							v-if="task.last_execution"
 						>
 							{{ moment(task.last_execution).fromNow() }}
-							<img src="img/info.png" alt="Infos" width="16" :title="'Result: '+task.output" />
+							<img src="img/info.svg" alt="Infos" width="16" :title="'Result: '+task.output" />
 						</span>
 						<span
 							v-else
