@@ -7,7 +7,7 @@
 		<title>MonitoLite - Network monitoring tool</title>
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-		<script type="text/javascript" src="js/scripts.js"></script>
+		<script type="text/javascript" type="module" src="js/scripts.js"></script>
 		<link type="text/css" rel="stylesheet" href="css/styles.css" />
 	</head>
 
@@ -21,60 +21,73 @@
 					v-for="group in tasks"
 					v-bind:key="group.id"
 					class="new-group"
-					:title="group.name"
+					:title="'Group: '+group.name"
 				>
-					<a
+					<p
 						v-for="task in group.tasks"
 						v-bind:key="task.id"
 						:href="'#task-'+task.id"
+						:class="statusText(task.status)"
+						class="square"
 					>
-						<p :class="statusText(task.status)" class="square">
-							<!--<img :src="'/img/'+statusText(task.status)+'.png'" width="16" alt="">-->
-						</p>
-					</a>
+						&nbsp;
+					</p>
 				</div>
 				<p class="spacer">&nbsp;</p>
 			</div>
 
 
-			<div
-				v-for="group in tasks"
-				v-bind:key="group.group_id"
-				class="task"
-			>
-				<h3>Tasks for group <span class="highlight">{{ group.name }}</span> <small>(#{{ group.id }})</small> </h3>
-				<table id="tasks_tbl">
-					<thead>
-						<tr>
-							<th width="5%">Up?</th>
-							<th width="*">Host</th>
-							<th width="5%">Type</th>
-							<th width="20%">Last execution</th>
-							<th width="20%">Frequency (min)</th>
-							<th width="5%">Active</th$query>
-						</tr>
-					</thead>
-					<tbody>
-						<tr
-							v-for="task in group.tasks"
-							v-bind:key="task.id"
-						>
-							<td :class="statusText(task.status)">
-								<img :src="'img/'+statusText(task.status)+'.png'" width="16" alt="Status" />
-								<a :name="'task-'+task.id"></a>
-							</td>
-							<td :class="statusText(task.status)">
-								<a :href="task.host" target="_blank">{{ task.host }}</a>
-							</td>
-							<td>
-								<img :src="task.type == 'http' ? 'img/http.png' : 'img/ping.png'" width="16" alt="Type of check" :title="'Type: '+task.type" />
-							</td>
-							<td>{{ task.last_execution ?? 'never' }}</td>
-							<td>{{ task.frequency }}</td>
-							<td>{{ task.active == 1 ? 'Yes' : 'No' }}</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="tasks">
+				<div
+					v-for="group in tasks"
+					v-bind:key="group.group_id"
+					class="task"
+				>
+					<h3>Tasks for group <span class="highlight">{{ group.name }}</span> <small>(#{{ group.id }})</small> </h3>
+					<table id="tasks_tbl">
+						<thead>
+							<tr>
+								<th width="5%">Up?</th>
+								<th width="*">Host</th>
+								<th width="5%">Type</th>
+								<th width="20%">Last execution</th>
+								<th width="20%">Frequency (min)</th>
+								<th width="5%">Active</th$query>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								v-for="task in group.tasks"
+								v-bind:key="task.id"
+							>
+								<td :class="statusText(task.status)">
+									<img :src="'img/'+statusText(task.status)+'.png'" width="16" alt="Status" />
+									<a :name="'task-'+task.id"></a>
+								</td>
+								<td :class="statusText(task.status)">
+									<a :href="task.host" target="_blank">{{ task.host }}</a>
+								</td>
+								<td>
+									<img :src="task.type == 'http' ? 'img/http.png' : 'img/ping.png'" width="16" alt="Type of check" :title="'Type: '+task.type" />
+								</td>
+								<td>
+									<span
+										v-if="task.last_execution"
+									>
+										{{ task.last_execution }}
+										<img src="img/info.png" alt="Infos" width="16" :title="'Result: '+task.output" />
+									</span>
+									<span
+										v-else
+									>
+										Never
+									</span>
+								<td>{{ task.frequency }}</td>
+								<td>{{ task.active == 1 ? 'Yes' : 'No' }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 

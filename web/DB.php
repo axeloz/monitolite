@@ -41,7 +41,7 @@ class DB {
 	public function get_all_tasks($status = null) {
 		if (is_null($status)) {
 			$query = '
-				SELECT DISTINCT t.id, t.host, t.type, t.params, t.frequency, t.creation_date, t.last_execution, t.active, t.group_id, h.status, g.name as group_name
+				SELECT DISTINCT t.id, t.host, t.type, t.params, t.frequency, t.creation_date, t.last_execution, t.active, t.group_id, h.status, h.output, g.name as group_name
 				FROM `tasks` as t
 				LEFT JOIN `tasks_history` as h ON (h.task_id = t.id)
 				LEFT JOIN `groups` as g ON (g.id = t.group_id)
