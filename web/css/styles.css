@@ -100,12 +100,12 @@ td {
 }
 
 .quick-view .square {
-  width: 2rem;
-  min-width: 2rem;
-  max-width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  max-height: 2rem;
+  width: 1rem;
+  min-width: 1rem;
+  max-width: 1rem;
+  height: 1rem;
+  min-height: 1rem;
+  max-height: 1rem;
   margin: 0.1rem;
   text-align: center;
   vertical-align: middle;
@@ -175,15 +175,15 @@ td {
 }
 
 .up {
-  background-color: #c9ecc9;
+  background-color: #8adf8a;
 }
 
 .down {
-  background-color: #ffc5c5;
+  background-color: #f79292;
 }
 
 .unknown {
-  background-color: rgb(243, 192, 97);
+  background-color: rgb(245, 214, 158);
 }
 
 

@@ -29,7 +29,7 @@
 						:href="'#task-'+task.id"
 					>
 						<p :class="statusText(task.status)" class="square">
-							<img :src="'/img/'+statusText(task.status)+'.png'" width="16" alt="">
+							<!--<img :src="'/img/'+statusText(task.status)+'.png'" width="16" alt="">-->
 						</p>
 					</a>
 				</div>

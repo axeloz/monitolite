@@ -69,7 +69,7 @@ my $smtp_ssl				= $ENV{'SMTP_SSL'};
 ############################
 
 ######
-# Testing database connection 
+# Testing database connection
 ######
 my $dsn = "DBI:$dbtype:database=$database;host=$hostname;port=$port";
 my $dbh = DBI->connect($dsn, $login, $password) or  output('cannot connect to database', 'ERROR', 1);
@@ -92,28 +92,28 @@ if ($numtasks > 0) {
 		my $status = -1;
 		$previous_status = -1;
 		$message = 'Host is back up';
-		
+
 		####
 		# Getting last history for this host
 		####
 		my $query2 = $dbh->prepare('SELECT status FROM tasks_history WHERE task_id = ' . $tasks->{'id'} . ' ORDER BY datetime DESC LIMIT 1');
 		$query2->execute() or output('Cannot get history for this task', 'ERROR', 0);
-		
+
 		if ($query2->rows > 0) {
 			my $history = $query2->fetchrow_hashref();
 			$previous_status = $history->{'status'};
 		}
-	
+
 		if ($tasks->{'type'} =~ 'ping') {
-		
+
 			# Ping check returned an error
 			if (! check_ping($tasks->{'host'})) {
 				$status = 0;
 				output('Host "'. $tasks->{'host'} .'" [' . $tasks->{'type'} . '] is down', 'ALERT');
 				$message = 'Host does not reply to ping. Timed out after 5s. Giving up...';
-				
+
 			}
-			# Ping check went fine 
+			# Ping check went fine
 			else {
 				$status = 1;
 				output('Host "'. $tasks->{'host'} .'" [' . $tasks->{'type'} . '] is up', 'SUCCESS');
@@ -121,33 +121,33 @@ if ($numtasks > 0) {
 		}
 		elsif ($tasks->{'type'} =~ 'http') {
 			$response = check_http($tasks->{'host'}, $tasks->{'params'});
-			
+
 			# HTTP check went fine
 			if ($response =~ 'OK') {
 				$status = 1;
 				output('Host "'. $tasks->{'host'} .'" [' . $tasks->{'type'} . '] is up', 'SUCCESS');
-			} 
+			}
 			# HTTP check returned an error
 			else {
 				$status = 0;
 				output('Host "'. $tasks->{'host'} .'" [' . $tasks->{'type'} . '] is down', 'ALERT');
 				$message = 'HTTP response was: ' . $response;
-			}		
+			}
 		}
 		else {
 			output('dunno how to process this task', 'DEBUG');
 			next;
 		}
-		
+
 		# Notify on status changes only
 		if ($previous_status != -1 && $status != $previous_status) {
 			output('Should send notification', 'DEBUG');
 			&send_notifications($tasks->{'id'}, $tasks->{'host'}, $tasks->{'type'}, $message, $status);
 		}
-	
+
 		# Saving Status into DB
 		if ($status >= 0) {
-			save_history($tasks->{'id'}, $status, $execution_time);
+			save_history($tasks->{'id'}, $status, $execution_time, $response);
 		}
 
 
@@ -165,17 +165,17 @@ else {
 sub check_ping {
 	my ($host, $round) = @_;
 	$round = 1 if (! $round);
-	
+
 	my $ping = Net::Ping->new('icmp');
 	output('ping check n°' . $round . ' on ' . $host, 'DEBUG');
-	
+
 	if (! $ping->ping($host)) {
 		$ping->close();
-		
+
 		if ($number_tries && $round <= $number_tries) {
 			sleep (2);
 			return check_ping($host, $round + 1)
-		} 
+		}
 		else {
 			return undef;
 		}
@@ -183,7 +183,7 @@ sub check_ping {
 	} else {
 		$ping->close();
 		return 'OK';
-	}	
+	}
 }
 
 #####
@@ -194,7 +194,7 @@ sub check_http {
 	$round = 1 if (! $round);
 
 	$host = 'http://'.$host if ($host !~ m/^http/i);
-	
+
 	my $check = LWP::UserAgent->new(
 		ssl_opts => { verify_hostname => 1 },
 		protocols_allowed => ['http', 'https']
@@ -213,16 +213,16 @@ sub check_http {
 			if ($html =~ m/$find/i) {
 				output('html content found, looks fine', 'SUCCESS');
 				return 'OK';
-			} 
+			}
 			else {
 				output('html content not found', 'ERROR');
 				return 'Could not find "' . $find . '" into the page';
 			}
-		} 
-		else {
-			return 'OK';		
 		}
-		
+		else {
+			return 'OK';
+		}
+
 	}
 	else {
 		output('HTTP response error was: '.$response->status_line, 'DEBUG');
@@ -231,9 +231,9 @@ sub check_http {
 			return check_http($host, $find, $round + 1);
 		}
 		else {
-			return $response->status_line;	
-		} 
-	}	
+			return $response->status_line;
+		}
+	}
 }
 
 
@@ -251,7 +251,7 @@ sub process_data {
 sub output {
 	my ($output, $level, $fatal) = @_;
 	$output = server_time().' - '.$level.' - '.$output."\n";
-	
+
 	if ($fatal && $fatal == 1) {
 		die ('FATAL '.$output);
 	}
@@ -265,16 +265,16 @@ sub output {
 # Function that keeps an history
 #####
 sub save_history {
-	my ($task_id, $status, $datetime) = @_;
-	my $query = $dbh->prepare('INSERT INTO tasks_history (status, datetime, task_id) VALUES(' . $status . ', "'.$datetime.'", ' . $task_id . ')');
+	my ($task_id, $status, $datetime, $response) = @_;
+	my $query = $dbh->prepare('INSERT INTO `tasks_history` (`status`, `datetime`, `task_id`, `output`) VALUES(' . $status . ', "'.$datetime.'", ' . $task_id . ', "' . $response . '")');
 	if ($query->execute()) {
 		output('saving status to history', 'DEBUG');
 	}
 	else {
 		output('cannot save status to history', 'ERROR');
 	}
-	
-	$update_query = $dbh->prepare('UPDATE tasks SET last_execution = "'.$datetime.'" WHERE id = ' . $task_id);
+
+	$update_query = $dbh->prepare('UPDATE `tasks` SET `last_execution` = "'.$datetime.'" WHERE id = ' . $task_id);
 	if ($update_query->execute()) {
 		output('saving last execution time for this task', 'DEBUG');
 	}
@@ -289,16 +289,16 @@ sub save_history {
 #####
 sub send_notifications {
 	my ($task_id, $host, $type, $message, $status) = @_;
-	
+
 	if ($status == 0) {
 		$subject = 'ALERT: host "' . $host . '" [' . $type . '] is down';
 		$datas = "------ ALERT DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . "(server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
 	}
 	else {
 		$subject = 'RECOVERY: host "' . $host . '" [' . $type . '] is up';
-		$datas = "------ RECOVERY DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . "(server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;	
+		$datas = "------ RECOVERY DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . "(server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
 	}
-	
+
 	my $query = $dbh->prepare('SELECT c.email FROM contacts as c JOIN notifications as n ON (n.contact_id = c.id) WHERE c.active = 1 AND n.task_id = '.$task_id);
 	if ($query->execute()) {
 		while ($emails = $query->fetchrow_hashref()) {
@@ -345,6 +345,6 @@ sub send_notifications {
 #####
 sub server_time {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-	my $now = (1900 + $year).'-'.($mon + 1).'-'.$mday.' '.$hour.':'.$min.':00';	
+	my $now = (1900 + $year).'-'.($mon + 1).'-'.$mday.' '.$hour.':'.$min.':00';
 	return $now;
 }
