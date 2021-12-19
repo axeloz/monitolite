@@ -46,7 +46,7 @@ I rewrote a couple of things today to make sure the script still works.
  * install Javascript dependencies: `cd ./web && npm install`
  * compile the Javascript sources: `cd ./web && npx mix --production`
  * create a Database and import the schema from `sql/create.sql`
- * create your own `.env` file: `cp .env.example .env` and adapt it to your needs
+ * create your own `.env` file: `cp env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `web` directory
  * add tasks and contacts into the database (no backend yet)
  * run the script: `perl monitolite.pl`
