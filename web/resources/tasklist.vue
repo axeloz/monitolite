@@ -37,7 +37,7 @@
 						>
 							Never
 						</span>
-					<td>{{ task.frequency / 10 }}</td>
+					<td>{{ task.frequency / 60 }}</td>
 					<td>{{ task.active == 1 ? 'Yes' : 'No' }}</td>
 				</tr>
 			</tbody>
