@@ -23,15 +23,17 @@
 					class="new-group"
 					:title="'Group: '+group.name"
 				>
-					<p
-						v-for="task in group.tasks"
-						v-bind:key="task.id"
-						:href="'#task-'+task.id"
-						:class="statusText(task.status)"
-						class="square"
-					>
-						&nbsp;
-					</p>
+					<a :href="'#group-'+group.id">
+						<p
+							v-for="task in group.tasks"
+							v-bind:key="task.id"
+							:href="'#task-'+task.id"
+							:class="statusText(task.status)"
+							class="square"
+						>
+							&nbsp;
+						</p>
+					</a>
 				</div>
 				<p class="spacer">&nbsp;</p>
 			</div>
@@ -40,9 +42,10 @@
 			<div class="tasks">
 				<div
 					v-for="group in tasks"
-					v-bind:key="group.group_id"
+					v-bind:key="group.id"
 					class="task"
 				>
+				<a :name="'group-'+group.id"></a>
 					<h3>Tasks for group <span class="highlight">{{ group.name }}</span> <small>(#{{ group.id }})</small> </h3>
 					<table id="tasks_tbl">
 						<thead>
@@ -62,7 +65,6 @@
 							>
 								<td :class="statusText(task.status)">
 									<img :src="'img/'+statusText(task.status)+'.png'" width="16" alt="Status" />
-									<a :name="'task-'+task.id"></a>
 								</td>
 								<td :class="statusText(task.status)">
 									<a :href="task.host" target="_blank">{{ task.host }}</a>
