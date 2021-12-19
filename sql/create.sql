@@ -1,7 +1,7 @@
 #
 # SQL Export
 # Created by Querious (300063)
-# Created: 19 December 2021 at 09:28:52 CET
+# Created: 19 December 2021 at 10:19:50 CET
 # Encoding: Unicode (UTF-8)
 #
 
@@ -57,7 +57,9 @@ CREATE TABLE `tasks` (
   `active` int NOT NULL DEFAULT '0',
   `group_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `host` (`host`,`type`)
+  UNIQUE KEY `host` (`host`,`type`),
+  KEY `group_id_frgn` (`group_id`),
+  CONSTRAINT `group_id_frgn` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb3;
 
 
@@ -75,10 +77,11 @@ CREATE TABLE `tasks_history` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `status` int unsigned NOT NULL,
   `datetime` datetime NOT NULL,
+  `output` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `task_id` int unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `task_id` (`task_id`),
-  CONSTRAINT `tasks_history_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`)
+  CONSTRAINT `tasks_history_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb3;
 
 
@@ -97,5 +100,5 @@ SET SQL_MODE = @ORIG_SQL_MODE;
 
 
 
-# Export Finished: 19 December 2021 at 09:28:52 CET
+# Export Finished: 19 December 2021 at 10:19:50 CET
 
