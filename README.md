@@ -1,7 +1,7 @@
 # MONITOLITE
 
 **MonitoLite** is an old project I recently dug up from my archives. I developed this script years ago for my personal needs. 
-I figured it could be useful for others so here we are.
+I figured it could be useful for others so I **rewrote** and **updated** it from scratch in a modern way.
 
 
 ## What it does
