@@ -67,7 +67,7 @@ class RunMonitoring extends Command
 			return true;
 		}
 
-		$this->info('I have '.count($tasks).' to process. Better get started ...');
+		$this->info('I have '.count($tasks).' tasks to process. Better get started ...');
 
 		$this->newLine();
 		$bar = $this->output->createProgressBar(count($tasks));
