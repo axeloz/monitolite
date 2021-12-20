@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
          * You may safely remove this scheduled task
          */
         if (env('CMS_ENABLE_SYNC') == true) {
-            $schedule->command('customers:sync')->everyMinute();
+            $schedule->command('customers:sync')->hourly();
         }
     }
 }
