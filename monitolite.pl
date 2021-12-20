@@ -49,15 +49,15 @@ my $datas;
 
 Dotenv->load;
 
-my $dbtype 				= $ENV{'DB_TYPE'};
+my $dbtype 					= $ENV{'DB_CONNECTION'};
 my $hostname 				= $ENV{'DB_HOST'};
-my $database 				= $ENV{'DB_NAME'};
-my $login 				= $ENV{'DB_USER'};
-my $port 				= $ENV{'DB_PORT'};
+my $database 				= $ENV{'DB_DATABASE'};
+my $login 					= $ENV{'DB_USERNAME'};
+my $port 					= $ENV{'DB_PORT'};
 my $password 				= $ENV{'DB_PASSWORD'};
 my $email_from 				= $ENV{'MAIL_FROM'};
 my $number_tries 			= $ENV{'NB_TRIES'};
-my $days_history_archive 		= $ENV{'ARCHIVE_DAYS'};
+my $days_history_archive 	= $ENV{'ARCHIVE_DAYS'};
 my $smtp_host				= $ENV{'SMTP_HOST'};
 my $smtp_user				= $ENV{'SMTP_USER'};
 my $smtp_password			= $ENV{'SMTP_PASSWORD'};
