@@ -70,30 +70,48 @@ class SyncCustomers extends Command
 		$ch = curl_init();
 		curl_setopt_array($ch, $opts);
 		if ($result = curl_exec($ch)) {
+			$hosts = [];
+
 			$customers = json_decode($result);
 
 			$bar = $this->output->createProgressBar(count($customers));
 			$bar->start();
 
-
 			// Getting existing tasks
-			$query = app('db')->select('SELECT * FROM tasks');
-			foreach ($query as $t) {
-				$tasks[$t->id] = preg_replace('~^https?://~', '', $t->host);
+			$tasks_flat = [];
+			$tasks = app('db')->select('SELECT * FROM tasks');
+			foreach ($tasks as $t) {
+				$tasks_flat[$t->id] = preg_replace('~^https?://~', '', trim($t->host));
 			}
 
 			// Getting existing contacts
 			$contacts = app('db')->select('SELECT * FROM contacts');
 
+			// Getting existing groups
+			$groups_flat = [];
+			$groups = app('db')->select('SELECT * FROM `groups`');
+			foreach ($groups as $g) {
+				$groups_flat[$g->id] = $g->name;
+			}
+
 			// First we insert new customers
 			foreach($customers as $c) {
 				$bar->advance();
-				if (false === $key = array_search($c->domain, $tasks)) {
+
+				$hosts[] = 'https://'.trim($c->domain);
+
+				// Checking group existence
+				if (empty($groups_flat[$c->id])) {
+					app('db')->insert('INSERT INTO `groups` (`id`, `name`) VALUE (?, ?)', [ $c->id, $c->name ]);
+					$groups_flat[$c->id] = $c->name;
+				}
+
+				if (false === array_search(trim($c->domain), $tasks_flat)) {
 					$ret = app('db')->insert('
 						INSERT INTO tasks (`host`, `type`, `params`, `creation_date`, `frequency`, `active`, `group_id`)
 						VALUES(:host, :type, :params, :creation_date, :frequency, :active, :group_id)
 					', [
-						'host'					=> 'https://'.$c->domain,
+						'host'					=> 'https://'.trim($c->domain),
 						'type'					=> 'http',
 						'params'				=> 'propulsé par',
 						'creation_date'			=> date('Y-m-d H:i:s'),
@@ -101,13 +119,38 @@ class SyncCustomers extends Command
 						'active'				=> 1,
 						'group_id'				=> $c->id
 					]);
+
+					if ($ret === true) {
+						$task_id = app('db')->getPdo()->lastInsertId();
+
+						// Inserting contacts
+						foreach ($contacts as $c) {
+							app('db')->insert('INSERT INTO notifications (`task_id`, `contact_id`) VALUES (:task_id, :contact_id)', [
+								'task_id'		=> $task_id,
+								'contact_id'	=> $c->id
+							]);
+						}
+					}
 				}
 			}
+			$bar->finish();
+
+			$this->newLine(2);
+			$this->line('Checking tasks to delete');
+			$bar = $this->output->createProgressBar(count($tasks));
+			$bar->start();
 
 			// Then we delete old customers
 			foreach ($tasks as $t) {
+				$bar->advance();
 
+				if (false === array_search($t->host, $hosts)) {
+					// Must delete task
+					//$this->line('must delete '.$t->host);
+					app('db')->delete('DELETE FROM `tasks` WHERE host = ?', [$t->host]);
+				}
 			}
+			$bar->finish();
 		}
     }
 }
