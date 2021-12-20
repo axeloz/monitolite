@@ -1,0 +1,55 @@
+<template>
+    <div class="container">
+        <h1>MonitoLite Dashboard</h1>
+        <p class="refreshed-time">Data refreshed: {{ refreshedTime }}</p>
+        <quick-view></quick-view>
+        <group-list></group-list>
+    </div>
+</template>
+
+<script>
+
+    import GroupList from './components/grouplist.vue'
+    import QuickView from './components/quickview.vue'
+
+    export default{
+        components: {
+            QuickView,
+            GroupList
+        },
+        data: function() {
+            return {
+                refreshed_time: null
+            }
+        },
+        computed: {
+            refreshedTime: function() {
+                return this.refreshed_time != null ? this.moment(this.refreshed_time).format('HH:mm:ss') : 'never'
+            }
+        },
+        methods: {
+            getTasks: function() {
+                this.$http.get('/api/getTasks')
+                .then(response => this.$store.commit('setTasks', response.data))
+                .then(() => {
+                    this.refreshed_time = this.moment();
+                })
+                .catch(error => window.alert('Cannot get tasks'))
+                this.refreshed_time = this.moment();
+            }
+        },
+        mounted: function() {
+            this.getTasks()
+            this.refresh = window.setInterval(() => {
+                this.getTasks();
+            }, 60000)
+        }
+    }
+</script>
+
+<style scoped>
+.refreshed-time {
+    text-align: right;
+    font-size: .8rem;
+}
+</style>

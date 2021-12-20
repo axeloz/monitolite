@@ -1,8 +1,9 @@
 let mix = require('laravel-mix');
 
 mix
-	.js('js/app.js', 'dist').vue()
-	.sass('css/app.scss', 'dist').options({
+	.setPublicPath('public/')
+	.js('resources/js/app.js', 'public/js').vue()
+	.sass('resources/sass/app.scss', 'public/css').options({
 		processCssUrls: false
 	})
 	.sourceMaps()
