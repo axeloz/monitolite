@@ -33,6 +33,7 @@
 								<img :src="'img/'+statusText(task.status)+'.svg'" width="16" alt="Status" />
 							</td>
 							<td>
+								<img src="/img/external.svg" alt="View host" width="16">
 								<a :href="task.host" target="_blank">{{ task.host }}</a>
 							</td>
 							<td>
@@ -51,11 +52,7 @@
 									Never
 								</span>
 							<td>{{ task.frequency / 60 }}</td>
-							<td>{{ task.active == 1 ? 'Yes' : 'No' }}</td>
 							<td>
-								<router-link :to="{ name: 'taskdetails', params: { id: task.id }}">
-									<img src="img/see.svg" alt="Details" width="20" />
-								</router-link>
 								<a
 									v-on:click.prevent="disableTask(task.id, task.active)"
 									href="#"
@@ -63,6 +60,11 @@
 								>
 									<img :src="task.active == 1 ? '/img/on.svg' : '/img/off.svg'" alt="Disable" width="24" />
 								</a>
+							</td>
+							<td>
+								<router-link :to="{ name: 'taskdetails', params: { id: task.id }}">
+									<img src="img/see.svg" alt="Details" width="20" />
+								</router-link>
 							</td>
 						</tr>
 					</tbody>
