@@ -59,9 +59,8 @@ class RunMonitoring extends Command
 			->where('active', 1)
 			->orderBy('last_execution', 'ASC')
 			->take($rounds)
-			//->get()
+			->get()
 		;
-		dd($tasks->toSql());
 
 		if (is_null($tasks) || count($tasks) == 0) {
 			$this->info('No task to process, going back to sleep');
