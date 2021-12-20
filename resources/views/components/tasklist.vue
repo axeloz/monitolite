@@ -7,7 +7,7 @@
 		>
 			<a :name="'group-'+group.id"></a>
 			<h3>
-				Tasks for group <span class="highlight">{{ group.name }} <small>(#{{ group.id }})</small></span>
+				Tasks for <span class="highlight">{{ group.name }} <small>(#{{ group.id }})</small></span>
 				<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 			</h3>
 
@@ -28,6 +28,7 @@
 						<tr
 							v-for="task in group.tasks"
 							v-bind:key="task.id"
+							:class="task.active == 0 ? 'inactive' : ''"
 						>
 							<td :class="statusText(task.status)">
 								<img :src="'/img/'+statusText(task.status)+'.svg'" width="16" alt="Status" />
@@ -52,7 +53,7 @@
 									Never
 								</span>
 							<td>{{ task.frequency / 60 }}</td>
-							<td :class="task.active == 1 ? 'up' : 'down'">
+							<td :class="task.active == 0 ? 'inactive' : ''">
 								<a
 									v-on:click.prevent="disableTask(task.id, task.active)"
 									href="#"

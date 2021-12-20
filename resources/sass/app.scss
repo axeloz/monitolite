@@ -7,6 +7,7 @@ $bg_color: #0a9f9a;
 $up_color: #8adf8a;
 $down_color: #f79292;
 $unknown_color: rgb(245, 214, 158);
+$inactive_color: #dfdfdf;
 
 * {
 	padding: 0;
@@ -187,10 +188,9 @@ html {
       padding: 0px 1rem;
       display: inline-block;
       color: #FFF;
-      font-size: 1rem;
       vertical-align: middle;
       border-radius: .5rem;
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
 
     .small {
@@ -211,6 +211,11 @@ html {
 
     .unknown {
       background-color: $unknown_color;
+    }
+
+    .inactive {
+      background-color: $inactive_color !important;
+      opacity: 0.5;
     }
   }
 }

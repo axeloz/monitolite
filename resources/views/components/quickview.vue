@@ -15,7 +15,7 @@
 						v-for="task in group.tasks"
 						v-bind:key="task.id"
 						:href="'#task-'+task.id"
-						:class="statusText(task.status)"
+						:class="statusText(task.status)+(task.active == 0 ? ' inactive' : '')"
 						class="square"
 					>
 						<span class="small">{{task.id }}</span>

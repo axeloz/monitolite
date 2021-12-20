@@ -144,10 +144,9 @@ html body .highlight {
   padding: 0px 1rem;
   display: inline-block;
   color: #FFF;
-  font-size: 1rem;
   vertical-align: middle;
   border-radius: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 html body .small {
   font-size: 0.8rem;
@@ -163,6 +162,10 @@ html body .down {
 }
 html body .unknown {
   background-color: #f5d69e;
+}
+html body .inactive {
+  background-color: #dfdfdf !important;
+  opacity: 0.5;
 }
 
 @-webkit-keyframes shake {
