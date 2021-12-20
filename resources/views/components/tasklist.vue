@@ -8,7 +8,7 @@
 			<a :name="'group-'+group.id"></a>
 			<h3>
 				Tasks for group <span class="highlight">{{ group.name }} <small>(#{{ group.id }})</small></span>
-				<!-- <p class="context-menu"><img src="img/menu.svg" width="40" /></p> -->
+				<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 			</h3>
 
 			<div class="block-content">
@@ -30,21 +30,21 @@
 							v-bind:key="task.id"
 						>
 							<td :class="statusText(task.status)">
-								<img :src="'img/'+statusText(task.status)+'.svg'" width="16" alt="Status" />
+								<img :src="'/img/'+statusText(task.status)+'.svg'" width="16" alt="Status" />
 							</td>
 							<td>
 								<img src="/img/external.svg" alt="View host" width="16">
 								<a :href="task.host" target="_blank">{{ task.host }}</a>
 							</td>
 							<td>
-								<img :src="task.type == 'http' ? 'img/http.svg' : 'img/ping.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
+								<img :src="task.type == 'http' ? '/img/http.svg' : '/img/ping.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
 							</td>
 							<td>
 								<span
 									v-if="task.last_execution"
 								>
 									{{ moment(task.last_execution).fromNow() }}
-									<img src="img/info.svg" alt="Infos" width="16" :title="'Result: '+task.output" />
+									<img src="/img/info.svg" alt="Infos" width="16" :title="'Result: '+task.output" />
 								</span>
 								<span
 									v-else
@@ -63,7 +63,7 @@
 							</td>
 							<td>
 								<router-link :to="{ name: 'taskdetails', params: { id: task.id }}">
-									<img src="img/see.svg" alt="Details" width="20" />
+									<img src="/img/see.svg" alt="Details" width="20" />
 								</router-link>
 							</td>
 						</tr>

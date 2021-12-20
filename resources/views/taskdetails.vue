@@ -2,7 +2,7 @@
 	<div>
 		<h3>
 			Task
-			<!-- <p class="context-menu"><img src="img/menu.svg" width="40" /></p> -->
+			<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 		</h3>
 	</div>
 </template>
