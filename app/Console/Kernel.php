@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+use App\Console\Commands\SyncCustomers;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        SyncCustomers::class
     ];
 
     /**
@@ -24,6 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        /**
+         * This is for my own needs
+         * You may safely remove this scheduled task
+         */
+        if (env('CMS_ENABLE_SYNC') == true) {
+            $schedule->command('customers:sync')->everyMinute();
+        }
     }
 }
