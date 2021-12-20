@@ -47,20 +47,23 @@ class RunMonitoring extends Command
      */
     public function handle()
     {
+		$n = DB::select('select now()');
+		dd($n);
 		$count = 0;
 		$rounds = $this->argument('rounds') ?? $this->rounds;
 
 		// Getting pending tasks
 		$tasks = DB::table('tasks')
 			->where(function($query) {
-				$query->whereRaw('DATE_SUB('.time().', INTERVAL frequency SECOND) > last_execution');
+				$query->whereRaw('DATE_SUB(NOW(), INTERVAL frequency SECOND) > last_execution');
 				$query->orWhereNull('last_execution');
 			})
 			->where('active', 1)
 			->orderBy('last_execution', 'ASC')
 			->take($rounds)
-			->get()
+			//->get()
 		;
+		dd($tasks->toSql());
 
 		if (is_null($tasks) || count($tasks) == 0) {
 			$this->info('No task to process, going back to sleep');
