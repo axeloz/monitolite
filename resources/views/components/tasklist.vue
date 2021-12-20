@@ -52,7 +52,7 @@
 									Never
 								</span>
 							<td>{{ task.frequency / 60 }}</td>
-							<td>
+							<td :class="task.active == 1 ? 'up' : 'down'">
 								<a
 									v-on:click.prevent="disableTask(task.id, task.active)"
 									href="#"
