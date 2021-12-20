@@ -85,6 +85,9 @@ html body table td {
   text-align: center;
   vertical-align: middle;
 }
+html body table td img {
+  vertical-align: middle;
+}
 html body table td.right {
   text-align: right;
 }

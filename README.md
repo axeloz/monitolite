@@ -43,8 +43,6 @@ I rewrote a couple of things today to make sure the script still works.
  * clone this repo
  * install Perl dependencies
  * install PHP composer dependencies: `cd ./web && composer install`
- * install Javascript dependencies: `cd ./web && npm install`
- * compile the Javascript sources: `cd ./web && npx mix --production`
  * create a Database and import the schema from `sql/create.sql`
  * create your own `.env` file: `cp env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `public` directory

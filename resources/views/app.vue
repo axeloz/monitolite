@@ -3,19 +3,19 @@
         <h1>MonitoLite Dashboard</h1>
         <p class="refreshed-time">Data refreshed: {{ refreshedTime }}</p>
         <quick-view></quick-view>
-        <group-list></group-list>
+        <task-list></task-list>
     </div>
 </template>
 
 <script>
 
-    import GroupList from './components/grouplist.vue'
+    import TaskList from './components/tasklist.vue'
     import QuickView from './components/quickview.vue'
 
     export default{
         components: {
             QuickView,
-            GroupList
+            TaskList
         },
         data: function() {
             return {

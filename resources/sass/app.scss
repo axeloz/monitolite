@@ -105,6 +105,10 @@ html {
           text-align: center;
           vertical-align: middle;
 
+          img {
+            vertical-align: middle;
+          }
+
           &.right {
             text-align: right;
           }

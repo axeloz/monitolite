@@ -40,19 +40,9 @@ class ApiController extends Controller
 				$group_id = $t->group_id;
 				$group_name = $t->group_name;
 			}
-
-
-			if (isset($tasks[$group_id])) {
-				array_push($tasks[$group_id]['tasks'], $t);
-			}
-			else {
-				$tasks[$group_id] = [
-					'id'			=> $group_id,
-					'name'			=> $group_name,
-					'tasks'			=> [ $t ]
-				];
-			}
+			$tasks[$group_id]['tasks'][$t->id] = $t;
 		}
+
 		return response()->json($tasks);
 	}
 
