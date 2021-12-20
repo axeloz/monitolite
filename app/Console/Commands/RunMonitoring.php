@@ -47,8 +47,6 @@ class RunMonitoring extends Command
      */
     public function handle()
     {
-		$n = DB::select('select now()');
-		dd($n);
 		$count = 0;
 		$rounds = $this->argument('rounds') ?? $this->rounds;
 
