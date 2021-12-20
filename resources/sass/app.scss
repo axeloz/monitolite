@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap');
 
+@font-face {
+	font-family: 'Digital7';
+	src:
+		url('/fonts/digital.ttf') format('truetype')
+	;
+	font-weight: normal;
+	font-style: normal;
+}
+
+
 /**
 * SETTINGS
 **/
@@ -15,226 +25,241 @@ $inactive_color: #dfdfdf;
 }
 
 html {
-  font-size: 100%;
-  scroll-behavior: smooth;
+	font-size: 100%;
+	scroll-behavior: smooth;
 
-  body {
-    padding: 10px;
-    font-family: 'Hind', sans-serif;
-    font-size: 1rem;
-    color: #3D3D3D;
-    background-image: url(../img/bush.png);
-    background-attachment: fixed;
-
-
-    a, a:visited {
-      color: inherit;
-      text-decoration: inherit;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .container {
-      padding: 0;
-      margin: 0 auto;
-      max-width: 1000px;
-    }
-
-    h1, h2, h3, h4 {
-      margin-top: .8rem;
-      margin-bottom: .8rem;
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      text-align: center;
-      margin: 3rem 0;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      margin-top: 0;
-      padding-top: 0;
-    }
-
-    h3 {
-      font-size: 1.4rem;
-      background-color: $bg_color;
-      margin: 0;
-      padding: .8rem;
-      color: rgb(240, 240, 240);
-      position: relative;
-
-      small {
-        font-size: .9rem;
-      }
-
-      .context-menu {
-        position: absolute;
-        right: .7rem;
-        top: .7rem;
-        cursor: pointer;
-        font-size: 1rem;
-      }
-    }
+	body {
+		padding: 10px;
+		font-family: 'Hind', sans-serif;
+		font-size: 1rem;
+		color: #3D3D3D;
+		background-image: url(../img/bush.png);
+		background-attachment: fixed;
 
 
-    img {
-      vertical-align: sub;
-    }
+		a, a:visited {
+			color: inherit;
+			text-decoration: inherit;
 
-    table {
-        border: 1px solid #ABC;
-        font-size: 14px;
-        border-spacing : 0;
-        border-collapse : collapse;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 
-        th {
-          background-color: #e6EEEE;
-          border: 1px solid #9ccece;
-          padding: 0.3rem;
+		.container {
+			padding: 0;
+			margin: 0 auto;
+			max-width: 1000px;
+		}
 
-        }
+		h1, h2, h3, h4 {
+			margin-top: .8rem;
+			margin-bottom: .8rem;
+		}
 
-        td {
-          color: #3D3D3D;
-          padding: 0.3rem;
-          background-color: #FFF;
-          border: 1px solid #9ccece;
-          text-align: center;
-          vertical-align: middle;
+		h1 {
+			font-size: 2.4rem;
+			text-align: center;
+			margin: 3rem 0;
+		}
 
-          img {
-            vertical-align: middle;
-          }
+		h2 {
+			font-size: 1.4rem;
+			margin-top: 0;
+			padding-top: 0;
+		}
 
-          &.right {
-            text-align: right;
-          }
-        }
+		h3 {
+			font-size: 1.4rem;
+			background-color: $bg_color;
+			margin: 0;
+			padding: .8rem;
+			color: rgb(240, 240, 240);
+			position: relative;
 
-        &#tasks_tbl, &#contacts_tbl {
-          width: 100%;
-        }
-    }
+			small {
+				font-size: .9rem;
+			}
 
-
-
-    .quick-view {
-      -webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-      -moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-      box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-      border-radius: 5px;
-      position: relative;
-      background-color: white;
-      overflow: hidden;
-
-      .new-group {
-        margin: .2rem;
-        display: inline-block;
-        border-radius: .4rem;
-        overflow: hidden;
-        cursor: pointer;
-
-        .square {
-          height: 100%;
-          margin: 0;
-          text-align: center;
-          vertical-align: middle;
-          float: left;
-          line-height: 1.2rem;
-          min-width: 1.4rem;
-          padding: .2rem .6rem;
-
-          &:not(:first-of-type) {
-            border-left: 1px solid white;
-          }
-        }
-      }
-    }
+			.context-menu {
+				position: absolute;
+				right: .7rem;
+				top: .7rem;
+				cursor: pointer;
+				font-size: 1rem;
+			}
+		}
 
 
-    .tasks {
-      .task {
-        margin-top: 2rem;
-        padding: 0;
-        -webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-        -moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-        box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-        border-radius: 5px;
-        position: relative;
-        background-color: white;
-        overflow: hidden;
-      }
-    }
+		img {
+			vertical-align: sub;
+		}
+
+		table {
+				border: 1px solid #ABC;
+				font-size: 14px;
+				border-spacing : 0;
+				border-collapse : collapse;
+
+				th {
+					background-color: #e6EEEE;
+					border: 1px solid #9ccece;
+					padding: 0.3rem;
+
+				}
+
+				td {
+					color: #3D3D3D;
+					padding: 0.3rem;
+					background-color: #FFF;
+					border: 1px solid #9ccece;
+					text-align: center;
+					vertical-align: middle;
+
+					img {
+						vertical-align: middle;
+					}
+
+					&.right {
+						text-align: right;
+					}
+				}
+
+				&#tasks_tbl, &#contacts_tbl {
+					width: 100%;
+				}
+		}
 
 
-    .spacer {
-      clear:both;
-      line-height: 0;
-      padding: 0;
-      margin:0;
-    }
 
-    .block-content {
-      padding: .8rem;
-    }
+		.quick-view {
+			-webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			-moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			border-radius: 5px;
+			position: relative;
+			background-color: white;
+			overflow: hidden;
+
+			.new-group {
+				margin: .2rem;
+				display: inline-block;
+				border-radius: .4rem;
+				overflow: hidden;
+				cursor: pointer;
+
+				.square {
+					height: 100%;
+					margin: 0;
+					text-align: center;
+					vertical-align: middle;
+					float: left;
+					line-height: 1.2rem;
+					min-width: 1.4rem;
+					padding: .2rem .6rem;
+
+					&:not(:first-of-type) {
+						border-left: 1px solid white;
+					}
+				}
+			}
+		}
 
 
-    .highlight {
-      background-color: #166260;
-      padding: 0px 1rem;
-      display: inline-block;
-      color: #FFF;
-      vertical-align: middle;
-      border-radius: .5rem;
-      font-size: 1rem;
-    }
+		.tasks {
+			.task {
+				margin-top: 2rem;
+				padding: 0;
+				-webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+				-moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+				box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+				border-radius: 5px;
+				position: relative;
+				background-color: white;
+				overflow: hidden;
+			}
+		}
 
-    .small {
-      font-size: .8rem;
-    }
 
-    .hidden {
-      display: none;
-    }
+		.spacer {
+			clear:both;
+			line-height: 0;
+			padding: 0;
+			margin:0;
+		}
 
-    .up {
-      background-color: $up_color;
-    }
+		.block-content {
+			padding: .8rem;
+		}
 
-    .down {
-      background-color: $down_color;
-    }
 
-    .unknown {
-      background-color: $unknown_color;
-    }
+		.highlight {
+			background-color: #166260;
+			padding: 0px 1rem;
+			display: inline-block;
+			color: #FFF;
+			vertical-align: middle;
+			border-radius: .5rem;
+			font-size: 1rem;
+		}
 
-    .inactive {
-      background-color: $inactive_color !important;
-      opacity: 0.5;
-    }
-  }
+		.small {
+			font-size: .8rem;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.up {
+			background-color: $up_color;
+		}
+
+		.down {
+			background-color: $down_color;
+		}
+
+		.unknown {
+			background-color: $unknown_color;
+		}
+
+		.inactive {
+			background-color: $inactive_color !important;
+			opacity: 0.5;
+		}
+
+		.refreshed-time {
+			text-align: right;
+			font-size: .8rem;
+				margin-bottom: 2rem;
+
+			.clock {
+				font-family: Digital7;
+				font-size: 1.2rem;
+				background-color: #000;
+				border-radius: 4px;
+				color: #FFF;
+				padding: .3rem .5rem;
+			}
+		}
+	}
 }
 
 
 @keyframes shake {
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
-  }
+	10%, 90% {
+		transform: translate3d(-1px, 0, 0);
+	}
 
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
-  }
+	20%, 80% {
+		transform: translate3d(2px, 0, 0);
+	}
 
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
-  }
+	30%, 50%, 70% {
+		transform: translate3d(-4px, 0, 0);
+	}
 
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
-  }
+	40%, 60% {
+		transform: translate3d(4px, 0, 0);
+	}
 }

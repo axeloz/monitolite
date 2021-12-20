@@ -1,4 +1,10 @@
 @import url(https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap);
+@font-face {
+  font-family: "Digital7";
+  src: url("/fonts/digital.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 /**
 * SETTINGS
 **/
@@ -166,6 +172,19 @@ html body .unknown {
 html body .inactive {
   background-color: #dfdfdf !important;
   opacity: 0.5;
+}
+html body .refreshed-time {
+  text-align: right;
+  font-size: 0.8rem;
+  margin-bottom: 2rem;
+}
+html body .refreshed-time .clock {
+  font-family: Digital7;
+  font-size: 1.2rem;
+  background-color: #000;
+  border-radius: 4px;
+  color: #FFF;
+  padding: 0.3rem 0.5rem;
 }
 
 @-webkit-keyframes shake {

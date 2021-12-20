@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h1>MonitoLite Dashboard</h1>
-        <p class="refreshed-time">Data refreshed: {{ refreshedTime }}</p>
+        <p class="refreshed-time">Last refresh: <br /><span class="clock">{{ refreshedTime }}</span></p>
         <quick-view></quick-view>
         <task-list></task-list>
     </div>
@@ -48,8 +48,5 @@
 </script>
 
 <style scoped>
-.refreshed-time {
-    text-align: right;
-    font-size: .8rem;
-}
+
 </style>
