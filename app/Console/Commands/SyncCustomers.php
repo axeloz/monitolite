@@ -113,7 +113,7 @@ class SyncCustomers extends Command
 					', [
 						'host'					=> 'https://'.trim($c->domain),
 						'type'					=> 'http',
-						'params'				=> 'propulsé par',
+						'params'				=> 'restovisio.com',
 						'creation_date'			=> date('Y-m-d H:i:s'),
 						'frequency'				=> 600,
 						'active'				=> 1,
