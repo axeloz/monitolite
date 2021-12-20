@@ -53,7 +53,7 @@ class RunMonitoring extends Command
 		// Getting pending tasks
 		$tasks = DB::table('tasks')
 			->where(function($query) {
-				$query->whereRaw('DATE_SUB(now(), INTERVAL frequency SECOND) > last_execution');
+				$query->whereRaw('DATE_SUB('.time().', INTERVAL frequency SECOND) > last_execution');
 				$query->orWhereNull('last_execution');
 			})
 			->where('active', 1)
