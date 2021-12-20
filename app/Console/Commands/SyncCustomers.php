@@ -19,7 +19,7 @@ class SyncCustomers extends Command
      *
      * @var string
      */
-    protected $signature = 'customers:sync';
+    protected $signature = 'monitolite:customers:sync';
 
     /**
      * The console command description.

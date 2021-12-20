@@ -51,7 +51,6 @@ class RunMonitoring extends Command
 		$rounds = $this->argument('rounds') ?? $this->rounds;
 
 		// Getting pending tasks
-		try {
 		$tasks = DB::table('tasks')
 			->where(function($query) {
 				$query->whereRaw('DATE_SUB(now(), INTERVAL frequency SECOND) > last_execution');
@@ -62,10 +61,6 @@ class RunMonitoring extends Command
 			->take($rounds)
 			->get()
 		;
-		}
-		catch (Exception $e) {
-			echo 'ERROR : '.$e->getMessage();
-		}
 
 		if (is_null($tasks) || count($tasks) == 0) {
 			$this->info('No task to process, going back to sleep');
