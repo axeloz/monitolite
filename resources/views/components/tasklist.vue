@@ -77,10 +77,10 @@ export default {
 			}
 		},
 		disableTask: function(task_id, current_status) {
-			console.log('Disabling task #'+task_id)
 			this.$http.post('/api/toggleTaskStatus/'+task_id, {
-				active: !current_status
+				active: + !current_status
 			})
+			.then(response => this.$store.commit('updateTask', response.data))
 		}
 	}
 }

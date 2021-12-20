@@ -64,18 +64,21 @@ class ApiController extends Controller
 			LEFT JOIN `tasks_history` as h ON (h.task_id = t.id)
 			LEFT JOIN `groups` as g ON (g.id = t.group_id)
 			WHERE (t.last_execution IS NULL OR h.datetime = t.last_execution) AND t.id = :task_id
+			LIMIT 1
 		', [
 			'task_id'   => $id
 		]);
 
 		if ($query) {
-			return response()->json($query);
+			foreach ($query as $q) {
+				return response()->json($q);
+			}
 		}
 	}
 
 	public function toggleTaskStatus(Request $request, $id) {
-		if( ! $active = $request->input('active')) {
-			throw new ApiException('Invalid parameters');
+		if($active = $request->input('active')) {
+			//throw new ApiException('Invalid parameters');
 		}
 
 		$active = intval($active);

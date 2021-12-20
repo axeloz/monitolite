@@ -41,6 +41,19 @@ const store = new Vuex.Store({
         setTasks(state, tasks) {
             state.tasks = tasks
         }
+    },
+    actions: {
+        updateTask(state, update) {
+            //let tasks = state.tasks
+
+            for (let i in state.tasks[update.group_id]['tasks']) {
+                if (state.tasks[update.group_id]['tasks'][i].id == update.id) {
+                    //tasks[update.group_id]['tasks'][i] = update
+                    state.tasks[update.group_id]['tasks'][i] = Object.assign({}, state.tasks[update.group_id]['tasks'][i], update)
+                }
+            }
+            console.log(state.tasks)
+        }
     }
 })
 
