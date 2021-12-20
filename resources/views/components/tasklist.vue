@@ -63,9 +63,7 @@
 								</a>
 							</td>
 							<td>
-								<router-link :to="{ name: 'taskdetails', params: { id: task.id }}">
-									<img src="/img/see.svg" alt="Details" width="20" />
-								</router-link>
+
 							</td>
 						</tr>
 					</tbody>
@@ -99,7 +97,7 @@ export default {
 			}
 		},
 		disableTask: function(task_id, current_status) {
-			this.$http.post('/api/toggleTaskStatus/'+task_id, {
+			this.$http.patch('/api/toggleTaskStatus/'+task_id, {
 				active: + !current_status
 			})
 			.then(response => this.$store.commit('updateTask', response.data))
