@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div class="container">
 		<h3>
-			Task
+			Task {{ task.id }}
 			<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 		</h3>
 	</div>
@@ -10,20 +10,19 @@
 <script>
 
     export default{
+		data: function() {
+			return {
+				task: null
+			}
+		},
 		mounted: function() {
 			let task_id = this.$route.params.id ?? null
 			console.log(task_id)
 
 			if (task_id != null) {
-				this.$http.get('api.php?a=get_task&id='+task_id)
+				this.$http.get('/api/getTask/'+task_id)
+				.then(response => this.task = response.data)
 			}
 		}
     }
 </script>
-
-<style scoped>
-.refreshed-time {
-    text-align: right;
-    font-size: .8rem;
-}
-</style>

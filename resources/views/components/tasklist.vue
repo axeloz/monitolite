@@ -63,7 +63,9 @@
 								</a>
 							</td>
 							<td>
-
+								<router-link :to="{ name: 'taskdetails', params: { id: task.id }}">
+									<img src="/img/see.svg" alt="Details" width="20" />
+								</router-link>
 							</td>
 						</tr>
 					</tbody>
