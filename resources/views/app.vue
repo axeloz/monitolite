@@ -42,7 +42,7 @@
             this.getTasks()
             this.refresh = window.setInterval(() => {
                 this.getTasks();
-            }, 60000)
+            }, 10000)
         }
     }
 </script>
