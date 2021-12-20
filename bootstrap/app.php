@@ -59,7 +59,20 @@ $app->singleton(
 |
 */
 
+/**
+ * This is a required HACK for Lumen
+ *
+ * @return string
+ */
+function setDbTimezone() {
+    $offset = timezone_offset_get(new \DateTimeZone(date_default_timezone_get()), new \DateTime());
+    return sprintf("%s%02d:%02d", ($offset >= 0) ? '+' : '-', abs($offset / 3600), abs($offset % 3600));
+}
+
 $app->configure('app');
+$app->configure('database');
+dd(config('database.connections.mysql.timezone'));
+
 
 /*
 |--------------------------------------------------------------------------
