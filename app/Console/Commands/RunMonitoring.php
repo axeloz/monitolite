@@ -51,16 +51,16 @@ class RunMonitoring extends Command
 		$rounds = $this->argument('rounds') ?? $this->rounds;
 
 		// Getting pending tasks
-		$tasks = app('db')->select('
-			SELECT id, host, type, params
-			FROM tasks
-			WHERE ( DATE_SUB(now(), INTERVAL frequency SECOND) > last_execution OR last_execution IS NULL )
-			AND active = 1
-			ORDER BY last_execution ASC
-			LIMIT :limit
-		', [
-			'limit'		=> $rounds
-		]);
+		$tasks = DB::table('tasks')
+			->where(function($query) {
+				$query->whereRaw('DATE_SUB(now(), INTERVAL frequency SECOND) > last_execution');
+				$query->orWhereNull('last_execution');
+			})
+			->where('active', 1)
+			->orderBy('last_execution', 'ASC')
+			->take($rounds)
+			->get()
+		;
 
 		if (is_null($tasks) || count($tasks) == 0) {
 			$this->info('No task to process, going back to sleep');
