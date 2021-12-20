@@ -59,16 +59,9 @@ var runApp = function() {
 
     new Vue({
         router,
+        components: { Home },
         store,
-        render: h => h(Home)
       }).$mount('#app')
-
-    // const app = new Vue({
-    //     el: '#app',
-	// 	components: { Home },
-	// 	router,
-	// });
-
 }
 
 window.addEventListener('load', function () {
