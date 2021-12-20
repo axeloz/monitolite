@@ -291,12 +291,12 @@ sub send_notifications {
 	my ($task_id, $host, $type, $message, $status) = @_;
 
 	if ($status == 0) {
-		$subject = 'ALERT: host "' . $host . '" [' . $type . '] is down';
-		$datas = "------ ALERT DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . "(server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
+		$subject = 'DOWN: host "' . $host . '" [' . $type . '] is down';
+		$datas = "------ ALERT DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . " (server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
 	}
 	else {
-		$subject = 'RECOVERY: host "' . $host . '" [' . $type . '] is up';
-		$datas = "------ RECOVERY DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . "(server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
+		$subject = 'UP: host "' . $host . '" [' . $type . '] is up';
+		$datas = "------ RECOVERY DETECTED BY MONITORING SERVICE ------ \n\n\nDATETIME: " . server_time() . " (server time)\nHOST: " . $host . "\nSERVICE: " . $type . "\nMESSAGE: " . $message;
 	}
 
 	my $query = $dbh->prepare('SELECT c.email FROM contacts as c JOIN notifications as n ON (n.contact_id = c.id) WHERE c.active = 1 AND n.task_id = '.$task_id);
