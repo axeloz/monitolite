@@ -199,7 +199,7 @@ sub check_http {
 		ssl_opts => { verify_hostname => 1 },
 		protocols_allowed => ['http', 'https']
 	);
-	$check->timeout(5);
+	$check->timeout(20);
 	$check->env_proxy;
 
 	my $response = $check->get($host, ':content_cb' => \&process_data);
