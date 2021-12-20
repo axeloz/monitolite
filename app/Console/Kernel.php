@@ -5,7 +5,6 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\SyncCustomers;
-use App\Console\Commands\CleanHistory;
 use App\Console\Commands\RunMonitoring;
 
 class Kernel extends ConsoleKernel
@@ -17,7 +16,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         SyncCustomers::class,
-        CleanHistory::class,
         RunMonitoring::class
     ];
 
