@@ -6,7 +6,7 @@ I figured it could be useful for others so I **rewrote** and **updated** it from
 
 ## What it does
 
-**MonitoLite** is a very simple monitoring tool developed in Perl. It supports :
+**MonitoLite** is a very simple monitoring tool developed in PHP powered by Lumen (by Laravel). It supports :
  * **ping monitoring**: sends a `ping` command to the specified host. Raises an alert if the host is down
  * **http monitoring**: requests the provided URL and raises an alert if the URL returns an error. Optionally you may specify a string to search on the page using the `param` database field. It raises an alert if the specified text could not be found on the page.
 
@@ -16,11 +16,8 @@ I figured it could be useful for others so I **rewrote** and **updated** it from
 It uses a SQL backend for handling the tasks and the status of the tasks.
 Tested on MySQL only but should support other SQL-based DBMS.
 
-It comes with a very straightforward dashboard written in PHP. This is **optional**, the `monitolite.pl` script runs as standalone.
+It comes with a very straightforward dashboard written in PHP. This is **optional**, the monitoring script runs as standalone.
 **Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication.
-
-
-I rewrote a couple of things today to make sure the script still works.
 
 ## Screenshot
 
@@ -29,27 +26,23 @@ I rewrote a couple of things today to make sure the script still works.
 
 ## Requirements
 
-* Perl : with DBI::MySQL, Dotenv, Net::Ping, Email::MIME, Email::Sender::Simple, Email::Sender::Transport::SMTP, LWP::Simple, LWP::UserAgent, LWP::Protocol::https
-* a MTA: Postfix, ...
-* PHP 7+ (optional): with PDO
+* PHP 7+ with cURL, `exec` command allowed, MySQL extension via PDO
+* a MTA: Postfix, or an external SMTP ...
 * a webserver (optional): Apache, Nginx, ...
 * a Database server: MySQL, other? (untested)
 * access to CRON tasks
-* possibly `root` access for the `ping` command to run (needs confirmation)
-
 
 ## Installation
 
  * clone this repo
- * install Perl dependencies
  * install PHP composer dependencies: `cd ./web && composer install`
  * create a Database and import the schema from `sql/create.sql`
  * create your own `.env` file: `cp env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `public` directory
  * add tasks and contacts into the database (no backend yet)
- * run the script: `perl monitolite.pl`
- * check the web dashboard for results.
- * when everything works, you may create a CRON `* * * * * cd <change/this/to/the/correct/path> && /usr/bin/perl monitolite.pl > /dev/null`
+ * run the script: `cd /var/www/<your-path> && php artisan monitolite:monitoring:run`
+ * check the output of the command for results.
+ * if everything works, you may create a CRON `* * * * * cd /var/www/<your-path> && php artisan monitolite:monitoring:run > /dev/null`
 
 
 ## Settings
@@ -76,7 +69,6 @@ I rewrote a couple of things today to make sure the script still works.
  * Make CRUD possible from the backend for adding tasks and contacts
  * Multithreading
  * SMS Notifications
- * Better dashboard
  * Protected backend with authentication
  * Create an installation script
  * Raise alert when tasks are not run at the correct frequency (CRON down or other reason)
