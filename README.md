@@ -36,7 +36,7 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 
  * clone this repo
  * install PHP composer dependencies: `cd ./web && composer install`
- * create a Database and import the schema from `sql/create.sql`
+ * create a Database and import the initial schema using `php artisan migrate`
  * create your own `.env` file: `cp .env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `public` directory
  * add tasks and contacts into the database (no GUI for CRUD yet)
