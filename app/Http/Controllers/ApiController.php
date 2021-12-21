@@ -77,6 +77,10 @@ class ApiController extends Controller
 				DB::table('task_history')
 					->select('id', DB::raw('MAX(created_at) as created_at'), 'output', 'status', 'task_id')
 					->groupBy('id')
+					->groupBy('output')
+					->groupBy('status')
+					->groupBy('task_id')
+					->groupBy('created_at')
 				, 'task_history', function($join) {
 				$join
 					->on('task_history.task_id', '=', 'tasks.id')
