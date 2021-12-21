@@ -71,7 +71,6 @@ function setDbTimezone() {
 
 $app->configure('app');
 $app->configure('database');
-dd(config('database.connections.mysql.timezone'));
 
 
 /*

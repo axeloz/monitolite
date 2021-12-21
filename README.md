@@ -37,9 +37,9 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
  * clone this repo
  * install PHP composer dependencies: `cd ./web && composer install`
  * create a Database and import the schema from `sql/create.sql`
- * create your own `.env` file: `cp env.example .env` and adapt it to your needs
+ * create your own `.env` file: `cp .env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `public` directory
- * add tasks and contacts into the database (no backend yet)
+ * add tasks and contacts into the database (no GUI for CRUD yet)
  * run the script: `cd /var/www/<your-path> && php artisan monitolite:monitoring:run`
  * check the output of the command for results.
  * if everything works, you may create a CRON `* * * * * cd /var/www/<your-path> && php artisan monitolite:monitoring:run > /dev/null`
@@ -47,22 +47,27 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 
 ## Settings
 
-* DB_TYPE=mysql
+* APP_NAME=Monitolite
+* APP_ENV=production
+* APP_KEY=<GENERATE KEY HERE>
+* APP_DEBUG=false
+* APP_URL=http://localhost
+* APP_TIMEZONE=UTC
+* DB_CONNECTION=mysql
 * DB_HOST=127.0.0.1
-* DB_USER=vagrant
-* DB_PASSWORD=vagrant
-* DB_NAME=monitoring
 * DB_PORT=3306
+* DB_DATABASE=homestead
+* DB_USERNAME=homestead
+* DB_PASSWORD=secret
 * SMTP_HOST=localhost
-* SMTP_USER=
+* DMTP_USER=
 * SMTP_PASSWORD=
-* SMTP_PORT=80
+* SMTP_PORT=25
 * SMTP_SSL=1
 * MAIL_FROM=axel@monitolite.fr
 * NB_TRIES=3
 * ARCHIVE_DAYS=10
 
-## MORE INFORMATION COMING SOON.
 
 ## TODO
 
