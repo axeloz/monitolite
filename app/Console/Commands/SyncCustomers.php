@@ -125,7 +125,7 @@ class SyncCustomers extends Command
 
 						// Inserting contacts
 						foreach ($contacts as $c) {
-							app('db')->insert('INSERT INTO notifications (`task_id`, `contact_id`) VALUES (:task_id, :contact_id)', [
+							app('db')->insert('INSERT INTO contact_task (`task_id`, `contact_id`) VALUES (:task_id, :contact_id)', [
 								'task_id'		=> $task_id,
 								'contact_id'	=> $c->id
 							]);

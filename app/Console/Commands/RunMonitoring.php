@@ -2,21 +2,29 @@
 
 namespace App\Console\Commands;
 
+use \Exception;
+use App\Models\Task;
+use App\Models\TaskHistory;
+use App\Models\Notification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use \Exception;
-use Illuminate\Queue\Console\MonitorCommand;
+use Illuminate\Support\Facades\Queue;
 
 class RunMonitoring extends Command
 {
 	private $rounds = 50;
+	private $max_tries = 3;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'monitolite:monitoring:run {rounds?}';
+    protected $signature = 'monitolite:monitoring:run
+				{--rounds=50 : the number of tasks to handle in one run}
+				{--task= : the ID of an individual task to handle}
+				{--force : handles tasks even if they are pending}
+	';
 
     /**
      * The console command description.
@@ -48,19 +56,46 @@ class RunMonitoring extends Command
     public function handle()
     {
 		$count = 0;
-		$rounds = $this->argument('rounds') ?? $this->rounds;
+		$rounds = $this->option('rounds') ?? $this->rounds;
+		$this->max_tries = env('NB_TRIES', $this->max_tries);
+
+		// If a force has been asked via command line
+		$force = false;
+		if (! empty($this->option('force'))) {
+			if (empty($this->option('task'))) {
+				if ($this->confirm('You asked me to force the execution (--force) but you did not specify a particular task ID (--task). I might have to handle a large amount of tasks. Are you sure?')) {
+					$force = true;
+				}
+			}
+			else {
+				$force = true;
+			}
+		}
 
 		// Getting pending tasks
-		$tasks = DB::table('tasks')
-			->where(function($query) {
-				$query->whereRaw('DATE_SUB(NOW(), INTERVAL frequency SECOND) > last_execution');
-				$query->orWhereNull('last_execution');
+		$tasks = Task::where(function($query) use ($force) {
+				$query->whereRaw('DATE_SUB(NOW(), INTERVAL frequency SECOND) > executed_at');
+				$query->orWhereBetween('attempts', [1, ($this->max_tries - 1)]);
+				$query->orWhereNull('executed_at');
+
+				if ($force === true) {
+					$query->orWhere('id', '>', 0);
+				}
 			})
 			->where('active', 1)
-			->orderBy('last_execution', 'ASC')
+			->orderBy('attempts', 'DESC')
+			->orderBy('executed_at', 'ASC')
 			->take($rounds)
-			->get()
 		;
+
+
+		// If a particular task has been set via the command line
+		if (! empty($this->option('task'))) {
+			$tasks = $tasks->where('id', '=', $this->option('task'));
+		}
+
+		// Now getting tasks
+		$tasks = $tasks->get();
 
 		if (is_null($tasks) || count($tasks) == 0) {
 			$this->info('No task to process, going back to sleep');
@@ -74,19 +109,10 @@ class RunMonitoring extends Command
 		$bar->start();
 
 		foreach ($tasks as $task) {
-			$last_status = $new_status = $output = null;
 			$bar->advance();
 
 			// Getting current task last status
-			$query = DB::table('tasks_history')
-				->select('status')
-				->where('task_id', $task->id)
-				->orderBy('datetime',  'DESC')
-				->first()
-			;
-			if ($query !== false && ! is_null($query)) {
-				$last_status = $query->status;
-			}
+			$previous_status = $task->status;
 
 			try {
 				switch ($task->type) {
@@ -103,13 +129,43 @@ class RunMonitoring extends Command
 						continue 2;
 				}
 
-				$this->saveHistory($task, true);
+				$history = $this->saveHistory($task, true);
 			}
 			catch(MonitoringException $e) {
-				$this->saveHistory($task, false, $e->getMessage());
+				$history = $this->saveHistory($task, false, $e->getMessage());
 			}
 			catch(Exception $e) {
-				$this->saveHistory($task, false, $e->getMessage());
+				$history = $this->saveHistory($task, false, $e->getMessage());
+			}
+			finally {
+				// Changing task timestamps and status
+				$task->executed_at		= $history->created_at; # Using the same timestamp as the task history
+				$task->attempts			= $history->status == 1 ? 0 : $task->attempts + 1; # when success, resetting counter
+				/**
+				 * We don't want to change the primary status in the task table
+				 * as long as failed tasks have reached the max tries limit
+				 * In the cast of a success, we can change the status straight away
+				 */
+				if ($history->status == 0 && $task->attempts >= $this->max_tries) {
+					$task->status			= 0;
+				}
+				else if ($history->status === 1) {
+					$task->status			= 1;
+				}
+
+				if (! $task->save()) {
+					throw new Exception('Cannot save task details');
+				}
+
+
+				// Task status has changed
+				// But not from null (new task)
+				if (! is_null($previous_status) && $task->status != $previous_status) {
+					// If host is up, no double-check
+					if ($task->status == 1 || ($task->status == 0 && $task->attempts == $this->max_tries)) {
+						Notification::addNotificationTask($history);
+					}
+				}
 			}
 		}
 		$bar->finish();
@@ -117,42 +173,39 @@ class RunMonitoring extends Command
 
 		if (!empty($this->results)) {
 			$this->table(
-				['Host', 'Result', 'Message'],
+				['ID', 'Host', 'Type', 'Result', 'Attempts', 'Message'],
 				$this->results
 			);
 		}
     }
 
-	final private function saveHistory($task, $status, $output = null) {
+	final private function saveHistory(Task $task, $status, $output = null) {
 		$date = date('Y-m-d H:i:s');
 
+		// Inserting new history
+		$insert 			= new TaskHistory;
+		$insert->status		= $status === true ? 1 : 0;
+		$insert->created_at	= $date;
+		$insert->output		= $output ?? '';
+		$insert->task_id	= $task->id;
+		if (! $insert->save()) {
+			throw new Exception('Cannot insert history for task #'.$task->id);
+		}
+
 		$this->results[] = [
+			'id'		=> $task->id,
 			'host'		=> $task->host,
+			'type'		=> $task->type,
 			'result'	=> $status === true ? 'OK' : 'FAILED',
+			'attempts'	=> $task->attempts,
 			'message'	=> $output
 		];
 
-		$insert = DB::table('tasks_history')
-			->insert([
-				'status'		=> $status === true ? 1 : 0,
-				'datetime'		=> $date,
-				'output'		=> $output ?? '',
-				'task_id'		=> $task->id
-			]
-		);
 
-		if (false !== $insert) {
-			DB::table('tasks')
-				->where('id', $task->id)
-				->update([
-					'last_execution'	=> $date
-				])
-			;
-			return true;
-		}
+		return  $insert;
 	}
 
-	final private function checkPing($task) {
+	final private function checkPing(Task $task) {
 		if (! function_exists('exec') || ! is_callable('exec')) {
 			throw new MonitoringException('The "exec" command is required');
 		}
@@ -196,7 +249,11 @@ class RunMonitoring extends Command
 		return true;
 	}
 
-	final private function checkHttp($task) {
+	final private function checkHttp(Task $task) {
+		if (app()->environment() == 'local') {
+			//throw new MonitoringException('Forcing error for testing');
+		}
+
 		// Preparing cURL
 		$opts = [
 			CURLOPT_HTTPGET					=> true,

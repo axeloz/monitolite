@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -22,14 +23,23 @@ class ApiController extends Controller
 	public function getTasks() {
 		$tasks = [];
 
-		$query = DB::select('
-			SELECT DISTINCT t.id, t.host, t.type, t.params, t.frequency, t.creation_date, t.last_execution, t.active, t.group_id, h.status, h.output, g.name as group_name
-			FROM `tasks` as t
-			LEFT JOIN `tasks_history` as h ON (h.task_id = t.id)
-			LEFT JOIN `groups` as g ON (g.id = t.group_id)
-			WHERE (t.last_execution IS NULL OR h.datetime = t.last_execution)
-			ORDER BY group_name ASC
-		');
+		$query = Task
+			::leftJoin('groups', 'groups.id', 'tasks.group_id')
+			->leftJoinSub(
+				DB::table('task_history')
+					->select('id', DB::raw('MAX(created_at) as created_at'), 'output', 'status', 'task_id')
+					->groupBy('id')
+				, 'task_history', function($join) {
+				$join
+					->on('task_history.task_id', '=', 'tasks.id')
+				;
+			})
+			->select(
+				'tasks.id', 'tasks.host', 'tasks.status', 'tasks.type', 'tasks.params', 'tasks.frequency', 'tasks.created_at', 'tasks.executed_at', 'tasks.active', 'tasks.group_id',
+				'task_history.output',
+				'groups.name as group_name')
+			->get()
+		;
 
 		foreach ($query as $t) {
 			if (is_null($t->group_id)) {
@@ -56,41 +66,42 @@ class ApiController extends Controller
 
 
 	public function getTaskDetails($id) {
-		$query = DB::select('
-			SELECT t.id, t.host, t.type, t.params, t.frequency, t.creation_date, t.last_execution, t.active, t.group_id, h.status, h.output, g.name as group_name
-			FROM `tasks` as t
-			LEFT JOIN `tasks_history` as h ON (h.task_id = t.id)
-			LEFT JOIN `groups` as g ON (g.id = t.group_id)
-			WHERE (t.last_execution IS NULL OR h.datetime = t.last_execution) AND t.id = :task_id
-			LIMIT 1
-		', [
-			'task_id'   => $id
-		]);
 
-		if ($query) {
-			foreach ($query as $q) {
-				return response()->json($q);
-			}
+		$task = Task
+			::leftJoin('groups', 'groups.id', 'tasks.group_id')
+			->leftJoinSub(
+				DB::table('task_history')
+					->select('id', DB::raw('MAX(created_at) as created_at'), 'output', 'status', 'task_id')
+					->groupBy('id')
+				, 'task_history', function($join) {
+				$join
+					->on('task_history.task_id', '=', 'tasks.id')
+				;
+			})
+			->select(
+				'tasks.id', 'tasks.host', 'tasks.status', 'tasks.type', 'tasks.params', 'tasks.frequency', 'tasks.created_at', 'tasks.executed_at', 'tasks.active', 'tasks.group_id',
+				'task_history.output',
+				'groups.name as group_name')
+			->findOrFail($id)
+		;
+
+		if (! is_null($task)) {
+			return response()->json($task);
 		}
 	}
 
 	public function toggleTaskStatus(Request $request, $id) {
-		if($active = $request->input('active')) {
-			//throw new ApiException('Invalid parameters');
-		}
+		$active = $request->input('active', null);
 
+		if (is_null($active)) {
+			throw new ApiException('Invalid parameters');
+		}
 		$active = intval($active);
 
-		$query = DB::update('
-			UPDATE tasks
-			SET active = :active
-			WHERE id = :id
-		', [
-			'active'	=> $active,
-			'id'    	=> $id
-		]);
+		$task = Task::findOrFail($id);
+		$task->active	= $active;
 
-		if ($query !== false) {
+		if ($task->save()) {
 			return $this->getTaskDetails($id);
 		}
 		else {

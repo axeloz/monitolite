@@ -42,9 +42,9 @@
 							</td>
 							<td>
 								<span
-									v-if="task.last_execution"
+									v-if="task.executed_at"
 								>
-									{{ moment(task.last_execution).fromNow() }}
+									{{ moment(task.executed_at).fromNow() }}
 									<img src="/img/info.svg" alt="Infos" width="16" :title="'Result: '+task.output" />
 								</span>
 								<span

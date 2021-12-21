@@ -4,6 +4,18 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `contact_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contact_task` (
+  `task_id` int unsigned NOT NULL,
+  `contact_id` int unsigned NOT NULL,
+  PRIMARY KEY (`task_id`,`contact_id`),
+  KEY `contact_id` (`contact_id`),
+  CONSTRAINT `contact_task_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `contact_task_ibfk_2` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `contacts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -32,7 +44,7 @@ DROP TABLE IF EXISTS `migrations`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -41,12 +53,32 @@ DROP TABLE IF EXISTS `notifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `notifications` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `contact_id` int unsigned NOT NULL DEFAULT '0',
+  `task_history_id` int unsigned NOT NULL DEFAULT '0',
+  `status` enum('pending','sent','error') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending',
+  `created_at` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `contact_id_frgn` (`contact_id`),
+  KEY `task_history_id_frgn` (`task_history_id`),
+  CONSTRAINT `contact_id_frgn` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `task_history_id_frgn` FOREIGN KEY (`task_history_id`) REFERENCES `task_history` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `task_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `task_history` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `status` int unsigned NOT NULL,
+  `output` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `task_id` int unsigned NOT NULL,
-  `contact_id` int unsigned NOT NULL,
-  PRIMARY KEY (`task_id`,`contact_id`),
-  KEY `contact_id` (`contact_id`),
-  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  PRIMARY KEY (`id`),
+  KEY `task_id` (`task_id`),
+  CONSTRAINT `task_history_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `tasks`;
@@ -57,11 +89,14 @@ CREATE TABLE `tasks` (
   `host` varchar(255) NOT NULL,
   `type` enum('ping','http') NOT NULL,
   `params` varchar(255) NOT NULL,
-  `creation_date` datetime NOT NULL,
   `frequency` int unsigned NOT NULL,
-  `last_execution` datetime DEFAULT NULL,
+  `attempts` int unsigned NOT NULL DEFAULT '0',
   `active` int NOT NULL DEFAULT '0',
+  `status` int unsigned DEFAULT NULL,
   `group_id` int unsigned DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `executed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `host` (`host`,`type`),
   KEY `group_id_frgn` (`group_id`),
@@ -79,20 +114,6 @@ CREATE TABLE `tasks_archives` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `tasks_history`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tasks_history` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `status` int unsigned NOT NULL,
-  `datetime` datetime NOT NULL,
-  `output` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `task_id` int unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `task_id` (`task_id`),
-  CONSTRAINT `tasks_history_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -100,3 +121,5 @@ CREATE TABLE `tasks_history` (
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+INSERT INTO `migrations` VALUES (1,'2021_12_21_101954_create_jobs_table',1);
+INSERT INTO `migrations` VALUES (2,'2021_12_21_102355_create_failed_jobs_table',2);
