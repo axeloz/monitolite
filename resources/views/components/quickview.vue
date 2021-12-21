@@ -5,7 +5,7 @@
 		</h3>
 		<div class="block-content">
 			<div
-				v-if="tasks.length > 0"
+				v-if="1 == 1"
 			>
 				<div
 					v-for="group in tasks"
