@@ -108,7 +108,7 @@ class SyncCustomers extends Command
 
 				if (false === array_search(trim($c->domain), $tasks_flat)) {
 					$ret = app('db')->insert('
-						INSERT INTO tasks (`host`, `type`, `params`, `creation_at`, `frequency`, `active`, `group_id`)
+						INSERT INTO tasks (`host`, `type`, `params`, `created_at`, `frequency`, `active`, `group_id`)
 						VALUES(:host, :type, :params, :creation_date, :frequency, :active, :group_id)
 					', [
 						'host'					=> 'https://'.trim($c->domain),
