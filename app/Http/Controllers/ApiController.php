@@ -31,6 +31,8 @@ class ApiController extends Controller
 					->groupBy('id')
 					->groupBy('output')
 					->groupBy('status')
+					->groupBy('task_id')
+					->groupBy('created_at')
 				, 'task_history', function($join) {
 				$join
 					->on('task_history.task_id', '=', 'tasks.id')
