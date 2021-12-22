@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\SyncCustomers;
 use App\Console\Commands\RunMonitoring;
+use App\Console\Commands\SendNotifications;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         SyncCustomers::class,
-        RunMonitoring::class
+        RunMonitoring::class,
+        SendNotifications::class
     ];
 
     /**
@@ -32,12 +34,17 @@ class Kernel extends ConsoleKernel
          * You may safely remove this scheduled task
          */
         if (env('CMS_ENABLE_SYNC') == true) {
-            $schedule->command('monitolite:customers:sync')->hourly();
+            $schedule->command('monitolite:sync')->hourly();
         }
 
         /**
          * This is the main monitoring task
          */
-        $schedule->command('monitolite:monitoring:run')->everyMinute();
+        $schedule->command('monitolite:run')->everyMinute();
+
+        /**
+         * Send all the notifications
+         */
+        $schedule->command('monitolite:notify')->everyMinute();
     }
 }
