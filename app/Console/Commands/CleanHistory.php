@@ -11,7 +11,7 @@ class CleanHistory extends Command
      *
      * @var string
      */
-    protected $signature = 'monitolite:history:clean';
+    protected $signature = 'monitolite:purge';
 
     /**
      * The console command description.
@@ -39,8 +39,8 @@ class CleanHistory extends Command
     {
 		$lastweek = \Carbon\Carbon::now()->subWeek();
 		$history = app('db')->select('
-			SELECT * FROM tasks_history as h
-			WHERE datetime < :lastweek
+			SELECT * FROM task_history as h
+			WHERE created_at < :lastweek
 		', [
 			'lastweek'		=> $lastweek
 		]);

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Queue;
 
 class RunMonitoring extends Command
 {
-	private $rounds = 50;
+	private $limit = 50;
 	private $max_tries = 3;
 
     /**
@@ -20,8 +20,8 @@ class RunMonitoring extends Command
      *
      * @var string
      */
-    protected $signature = 'monitolite:monitoring:run
-				{--rounds=50 : the number of tasks to handle in one run}
+    protected $signature = 'monitolite:run
+				{--limit=50 : the number of tasks to handle in one run}
 				{--task= : the ID of an individual task to handle}
 				{--force : handles tasks even if they are pending}
 	';
@@ -56,7 +56,7 @@ class RunMonitoring extends Command
     public function handle()
     {
 		$count = 0;
-		$rounds = $this->option('rounds') ?? $this->rounds;
+		$limit = $this->option('limit') ?? $this->limit;
 		$this->max_tries = env('NB_TRIES', $this->max_tries);
 
 		// If a force has been asked via command line
@@ -85,7 +85,7 @@ class RunMonitoring extends Command
 			->where('active', 1)
 			->orderBy('attempts', 'DESC')
 			->orderBy('executed_at', 'ASC')
-			->take($rounds)
+			->take($limit)
 		;
 
 
@@ -251,7 +251,7 @@ class RunMonitoring extends Command
 
 	final private function checkHttp(Task $task) {
 		if (app()->environment() == 'local') {
-			//throw new MonitoringException('Forcing error for testing');
+			throw new MonitoringException('Forcing error for testing');
 		}
 
 		// Preparing cURL
