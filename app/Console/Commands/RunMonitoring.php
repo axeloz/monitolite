@@ -249,7 +249,7 @@ class RunMonitoring extends Command
 
 	final private function checkHttp(Task $task) {
 		if (app()->environment() == 'local') {
-			throw new MonitoringException('Forcing error for testing');
+			//throw new MonitoringException('Forcing error for testing');
 		}
 
 		// Preparing cURL
