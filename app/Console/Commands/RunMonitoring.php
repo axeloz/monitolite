@@ -7,8 +7,6 @@ use App\Models\Task;
 use App\Models\TaskHistory;
 use App\Models\Notification;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Queue;
 
 class RunMonitoring extends Command
 {
