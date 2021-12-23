@@ -40,7 +40,7 @@
 						<tbody>
 							<tr
 								v-for="h in history"
-								v-bind:key="history.id"
+								v-bind:key="h.id"
 							>
 								<td>{{ moment(h.created_at).format('YYYY-MM-DD') }}</td>
 								<td>{{ moment(h.created_at).format('HH:mm:ss') }}</td>

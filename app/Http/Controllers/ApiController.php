@@ -84,9 +84,9 @@ class ApiController extends Controller
 			// Then we get all history for the past month
 			$history = $task
 				->history()
-				->orderBy('created_at', 'asc')
+				->orderBy('created_at', 'desc')
 				->where('created_at', '>', $last_days->toDateString())
-				->selectRaw('date(created_at) as date, status')
+				->selectRaw('date(created_at) as date, created_at, status')
 				->get()
 			;
 
@@ -126,7 +126,7 @@ class ApiController extends Controller
 
 				foreach ($history as $k => $h) {
 					// We only take tasks when status has changed between them
-					if ($h->status == $prev) {
+					if (! is_null($prev) && $h->status == $prev) {
 						unset($history[$k]);
 					}
 					$prev = $h->status;
