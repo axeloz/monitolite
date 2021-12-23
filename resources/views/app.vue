@@ -38,6 +38,10 @@
                 this.refreshed_time = this.moment();
             }
         },
+        beforeRouteLeave(to, from, next) {
+            clearTimeout(this.refresh);
+            next();
+        },
         mounted: function() {
             this.getTasks()
             this.refresh = window.setInterval(() => {

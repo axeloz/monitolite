@@ -1,14 +1,13 @@
 <?php
 
+namespace App\Console\Commands;
 
 /**
+ * R E A D    T H I S :
  * THIS COMMAND IS FOR MY OWN NEEDS ONLY
  * IT SYNCS ALL THE TASKS FROM A DISTANT API
  * IT IS PROBABLY WORTHLESS FOR YOU
  */
-
-
-namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
