@@ -8,6 +8,15 @@
 				<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 			</h1>
 
+			Show:
+			<select
+				v-model="chart.days"
+				@change="refreshGraph"
+			>
+				<option value="7">7 days</option>
+				<option value="15">15 days</option>
+				<option value="30">30 days</option>
+			</select>
 			<h3>Uptime: past {{ chart.days }} days</h3>
 			<div id="chart">
 				<apexchart v-if="chart.render" type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
@@ -71,12 +80,6 @@
 					text: 'Loading...'
 				},
 				chartOptions: {
-					chart: {
-						type: 'bar',
-						height: 350,
-						stacked: true,
-						stackType: '100%'
-					},
 					responsive: [{
 						breakpoint: 480,
 						options: {
@@ -113,6 +116,52 @@
 					default:
 						return 'unknown';
 				}
+			},
+			refreshGraph: function() {
+				this.$http.post('/api/getTaskGraph/'+this.task.id, {
+					days: this.chart.days
+				})
+				.then(response => {
+					let xaxis = [];
+					let new_data_a = [];
+					let new_data_b = [];
+					console.log(response.data)
+
+					for (let date in response.data) {
+						xaxis.push(date)
+						new_data_a.push(response.data[date]['up'])
+						new_data_b.push(response.data[date]['down'])
+					}
+
+					this.chartOptions = {
+						xaxis: {
+							categories: xaxis,
+							labels: {
+								show: true,
+								rotate: -45,
+								rotateAlways: true,
+							}
+						},
+						chart: {
+							type: 'bar',
+							height: 300,
+							stacked: true,
+							stackType: '100%'
+						},
+					}
+					this.series = [{
+						name: 'UP',
+						data: new_data_a,
+						color: '#00955c'
+					},
+					{
+						name: 'DOWN',
+						data: new_data_b,
+						color: '#ef3232'
+					}]
+
+					this.chart.render = true
+				})
 			}
 		},
 		mounted: function() {
@@ -124,35 +173,7 @@
 				})
 				.then(response => this.task = response.data)
 				.then(() => {
-					this.$http.post('/api/getTaskGraph/'+task_id, {
-						days: this.chart.days
-					})
-					.then(response => {
-						let xaxis = [];
-						let new_data_a = [];
-						let new_data_b = [];
-						console.log(response.data)
-
-						for (let date in response.data) {
-							xaxis.push(date)
-							new_data_a.push(response.data[date]['up'])
-							new_data_b.push(response.data[date]['down'])
-						}
-
-						this.chartOptions.xaxis.categories = xaxis;
-						this.series = [{
-							name: 'UP',
-							data: new_data_a,
-							color: '#00955c'
-						},
-						{
-							name: 'DOWN',
-							data: new_data_b,
-							color: '#ef3232'
-						}]
-
-						this.chart.render = true
-					})
+					this.refreshGraph()
 				})
 			}
 		}
