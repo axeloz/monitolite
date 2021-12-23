@@ -19,7 +19,8 @@
         },
         data: function() {
             return {
-                refreshed_time: null
+                refreshed_time: null,
+                refresh: null
             }
         },
         computed: {
