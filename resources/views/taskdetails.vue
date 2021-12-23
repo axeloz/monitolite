@@ -8,14 +8,19 @@
 				<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 			</h1>
 
+			<h3>Uptime: past {{ chart.days }} days</h3>
+			<div id="chart">
+				<apexchart v-if="chart.render" type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+			</div>
 
-			<h3>History log</h3>
-			<p>Showing the latest {{ task.limit }} history records</p>
-
-			<table id="tasks_tbl">
+			<h3>Last {{ chart.days }} days history log</h3>
+			<div v-if="task.history.length > 0">
+				<p><i>Showing only records where status has changed</i></p>
+				<table id="tasks_tbl">
 					<thead>
 						<tr>
 							<th width="20%">Date</th>
+							<th width="20%">Time</th>
 							<th width="*">Output</th>
 							<th width="10%">Status</th>
 						</tr>
@@ -24,9 +29,9 @@
 						<tr
 							v-for="history in task.history"
 							v-bind:key="history.id"
-							:class="task.active == 0 ? 'inactive' : ''"
 						>
-							<td>{{ moment(history.created_at).format('YYYY-MM-DD HH:mm:ss') }}</td>
+							<td>{{ moment(history.date).format('YYYY-MM-DD') }}</td>
+							<td>{{ moment(history.created_at).format('HH:mm:ss') }}</td>
 							<td>
 								<span v-if="history.output">
 									{{ history.output }}
@@ -41,6 +46,8 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<p v-else>No history to display here</p>
 		</div>
 	</div>
 </template>
@@ -50,7 +57,48 @@
     export default{
 		data: function() {
 			return {
-				task: null
+				task: null,
+
+				chart: {
+					render: false,
+					days: 15
+				},
+
+				series: [{
+					data: []
+				}],
+				noData: {
+					text: 'Loading...'
+				},
+				chartOptions: {
+					chart: {
+						type: 'bar',
+						height: 350,
+						stacked: true,
+						stackType: '100%'
+					},
+					responsive: [{
+						breakpoint: 480,
+						options: {
+							legend: {
+								position: 'bottom',
+								offsetX: -10,
+								offsetY: 0
+							}
+						}
+					}],
+					xaxis: {
+						categories: [],
+					},
+					fill: {
+						opacity: .9
+					},
+					legend: {
+						position: 'right',
+						offsetX: 0,
+						offsetY: 50
+					},
+				},
 			}
 		},
 		methods: {
@@ -71,9 +119,48 @@
 			let task_id = this.$route.params.id ?? null
 
 			if (task_id != null) {
-				this.$http.get('/api/getTask/'+task_id)
+				this.$http.post('/api/getTask/'+task_id, {
+					days: this.chart.days
+				})
 				.then(response => this.task = response.data)
+				.then(() => {
+					this.$http.post('/api/getTaskGraph/'+task_id, {
+						days: this.chart.days
+					})
+					.then(response => {
+						let xaxis = [];
+						let new_data_a = [];
+						let new_data_b = [];
+						console.log(response.data)
+
+						for (let date in response.data) {
+							xaxis.push(date)
+							new_data_a.push(response.data[date]['up'])
+							new_data_b.push(response.data[date]['down'])
+						}
+
+						this.chartOptions.xaxis.categories = xaxis;
+						this.series = [{
+							name: 'UP',
+							data: new_data_a,
+							color: '#00955c'
+						},
+						{
+							name: 'DOWN',
+							data: new_data_b,
+							color: '#ef3232'
+						}]
+
+						this.chart.render = true
+					})
+				})
 			}
 		}
     }
 </script>
+
+<style scoped>
+#chart {
+	margin-top: 3rem;
+}
+</style>

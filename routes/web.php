@@ -15,7 +15,8 @@
 
 $router->group(['prefix' => 'api/'], function () use ($router) {
     $router->get('getTasks/',  ['uses' => 'ApiController@getTasks']);
-    $router->get('getTask/{id}',  ['uses' => 'ApiController@getTaskDetails']);
+    $router->post('getTask/{id}',  ['uses' => 'ApiController@getTaskDetails']);
+    $router->post('getTaskGraph/{id}',  ['uses' => 'ApiController@getTaskGraph']);
     $router->patch('toggleTaskStatus/{id}',  ['uses' => 'ApiController@toggleTaskStatus']);
 });
 

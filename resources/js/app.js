@@ -14,6 +14,9 @@ Vue.prototype.$http = axios
 import moment from 'moment'
 Vue.prototype.moment = moment
 
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 
 import Home from '../views/app.vue'
 import TaskDetails from '../views/taskdetails.vue'
