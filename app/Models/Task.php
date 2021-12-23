@@ -26,15 +26,15 @@ class Task extends Model
         return $this->belongsTo('App\Models\Group');
     }
 
-    public function notifications() {
-        return $this->hasMany('App\Models\Notification');
-    }
-
     public function contacts() {
         return $this->belongsToMany('App\Models\Contact');
     }
 
     public function history() {
         return $this->hasMany('App\Models\TaskHistory');
+    }
+
+    public function notifications() {
+        return $this->hasManyThrough('App\Models\Notification', 'App\Models\TaskHistory');
     }
 }

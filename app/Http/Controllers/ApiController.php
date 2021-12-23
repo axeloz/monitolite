@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Exception;
 use \Carbon\Carbon;
 use App\Models\Task;
-use App\Models\TaskHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -80,26 +79,27 @@ class ApiController extends Controller
 		if (! is_null($task)) {
 			// First, we get the first date of the stats
 			// In this case, one month ago
-			$date = $last_days = Carbon::now()->subDays($days);
+			$last_days = Carbon::now()->subDays($days);
 			// Then we get all history for the past month
 			$history = $task
 				->history()
 				->orderBy('created_at', 'desc')
 				->where('created_at', '>', $last_days->toDateString())
-				->selectRaw('date(created_at) as date, created_at, status')
+				->selectRaw('id, date(created_at) as date, created_at, status')
 				->get()
 			;
 
 			// Then we start building an array for the entire month
 			$stats = [];
+			$tmpdate = Carbon::now()->subDays($days);
 			do {
-				$stats[$date->toDateString()] = [
+				$stats[$tmpdate->toDateString()] = [
 					'up'	=> 0,
 					'down'	=> 0
 				];
-				$date = $date->addDay();
+				$tmpdate = $tmpdate->addDay();
 			}
-			while ($date->lt(Carbon::now()));
+			while ($tmpdate->lt(Carbon::now()));
 
 			// Then we populate the stats data
 			if (! is_null($history)) {
@@ -133,10 +133,20 @@ class ApiController extends Controller
 				}
 			}
 
+			// Getting the notifications sent
+			$notifications = $task
+				->notifications()
+				->with('contact')
+				->where('notifications.created_at', '>', $last_days->toDateString())
+				->orderBy('notifications.created_at', 'desc')
+				->get()
+			;
+
 			return response()->json([
-				'task'		=> $task,
-				'stats'		=> $stats,
-				'history'	=> $history
+				'task'				=> $task,
+				'stats'				=> $stats,
+				'history'			=> $history,
+				'notifications'		=> $notifications
 			]);
 		}
 	}
@@ -153,7 +163,7 @@ class ApiController extends Controller
 		$task->active	= $active;
 
 		if ($task->save()) {
-			return $this->getTaskDetails($id);
+			return response()->json($task);
 		}
 		else {
 			throw new ApiException('Cannot disable this task');

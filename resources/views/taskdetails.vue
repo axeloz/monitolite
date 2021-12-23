@@ -4,7 +4,7 @@
 			v-if="task.id != null"
 		>
 			<h1>
-				Task #{{ task.id }}
+				<span class="highlight">{{ task.type }}</span> for host <span class="highlight">{{ task.host }}</span>
 				<!-- <p class="context-menu"><img src="/img/menu.svg" width="40" /></p> -->
 			</h1>
 
@@ -17,6 +17,8 @@
 				<option value="15">15 days</option>
 				<option value="30">30 days</option>
 			</select>
+
+			<!-- Chart block -->
 			<div id="chart" class="round">
 				<h3>Uptime: past {{ chart.days }} days</h3>
 				<div class="block-content">
@@ -24,9 +26,10 @@
 				</div>
 			</div>
 
+			<!-- History backlog -->
 			<div class="round">
 				<h3>Last {{ chart.days }} days history log</h3>
-				<div class="block-content" v-if="history">
+				<div class="block-content" v-if="history.length > 0">
 					<p><i>Showing only records where status has changed</i></p>
 					<table id="tasks_tbl">
 						<thead>
@@ -61,6 +64,39 @@
 				</div>
 				<p v-else><center>No history to display here</center></p>
 			</div>
+
+			<!-- Notifications block -->
+			<div class="round">
+				<h3>Last {{ chart.days }} days notifications log</h3>
+				<div class="block-content" v-if="notifications.length > 0">
+					<table id="tasks_tbl">
+						<thead>
+							<tr>
+								<th width="20%">Date</th>
+								<th width="20%">Time</th>
+								<th width="*">Firstname</th>
+								<th width="10%">Lastname</th>
+								<th width="10%">Email</th>
+								<th width="10%">Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								v-for="n in notifications"
+								v-bind:key="n.id"
+							>
+								<td>{{ moment(n.created_at).format('YYYY-MM-DD') }}</td>
+								<td>{{ moment(n.created_at).format('HH:mm:ss') }}</td>
+								<td>{{ n.contact.firstname }}</td>
+								<td>{{ n.contact.surname }}</td>
+								<td>{{ n.contact.email }}</td>
+								<td>{{ n.status }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p v-else><center>No notification to display here</center></p>
+			</div>
 		</div>
 	</div>
 </template>
@@ -74,6 +110,7 @@
 					id: null
 				},
 				history: null,
+				notifications: null,
 				refresh: null,
 
 				chart: {
@@ -125,8 +162,9 @@
 					days: this.chart.days
 				})
 				.then(response => {
-					this.task = response.data.task
-					this.history = response.data.history
+					this.task 			= response.data.task
+					this.history 		= response.data.history
+					this.notifications	= response.data.notifications
 					this.refreshGraph(response.data.stats)
 				})
 
