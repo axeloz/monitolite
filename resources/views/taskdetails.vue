@@ -35,7 +35,7 @@
 									<i>No output</i>
 								</span>
 							</td>
-							<td :class="statusText(task.status)">
+							<td :class="statusText(history.status)">
 								<img :src="'/img/'+statusText(history.status)+'.svg'" width="16" alt="Status" />
 							</td>
 						</tr>
