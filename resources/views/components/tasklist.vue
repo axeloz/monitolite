@@ -3,7 +3,7 @@
 		<div
 			v-for="group in tasks"
 			v-bind:key="group.id"
-			class="task"
+			class="task round"
 		>
 			<a :name="'group-'+group.id"></a>
 			<h3>

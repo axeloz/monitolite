@@ -17,44 +17,48 @@
 				<option value="15">15 days</option>
 				<option value="30">30 days</option>
 			</select>
-			<h3>Uptime: past {{ chart.days }} days</h3>
-			<div id="chart">
-				<apexchart v-if="chart.render" type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+			<div id="chart" class="round">
+				<h3>Uptime: past {{ chart.days }} days</h3>
+				<div class="block-content">
+					<apexchart class="graph" v-if="chart.render" type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+				</div>
 			</div>
 
-			<h3>Last {{ chart.days }} days history log</h3>
-			<div v-if="task.history.length > 0">
-				<p><i>Showing only records where status has changed</i></p>
-				<table id="tasks_tbl">
-					<thead>
-						<tr>
-							<th width="20%">Date</th>
-							<th width="20%">Time</th>
-							<th width="*">Output</th>
-							<th width="10%">Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr
-							v-for="history in task.history"
-							v-bind:key="history.id"
-						>
-							<td>{{ moment(history.date).format('YYYY-MM-DD') }}</td>
-							<td>{{ moment(history.created_at).format('HH:mm:ss') }}</td>
-							<td>
-								<span v-if="history.output">
-									{{ history.output }}
-								</span>
-								<span v-else>
-									<i>No output</i>
-								</span>
-							</td>
-							<td :class="statusText(history.status)">
-								<img :src="'/img/'+statusText(history.status)+'.svg'" width="16" alt="Status" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<div v-if="task.history.length > 0" class="round">
+				<h3>Last {{ chart.days }} days history log</h3>
+				<div class="block-content">
+					<p><i>Showing only records where status has changed</i></p>
+					<table id="tasks_tbl">
+						<thead>
+							<tr>
+								<th width="20%">Date</th>
+								<th width="20%">Time</th>
+								<th width="*">Output</th>
+								<th width="10%">Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								v-for="history in task.history"
+								v-bind:key="history.id"
+							>
+								<td>{{ moment(history.date).format('YYYY-MM-DD') }}</td>
+								<td>{{ moment(history.created_at).format('HH:mm:ss') }}</td>
+								<td>
+									<span v-if="history.output">
+										{{ history.output }}
+									</span>
+									<span v-else>
+										<i>No output</i>
+									</span>
+								</td>
+								<td :class="statusText(history.status)">
+									<img :src="'/img/'+statusText(history.status)+'.svg'" width="16" alt="Status" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<p v-else>No history to display here</p>
 		</div>
@@ -181,7 +185,5 @@
 </script>
 
 <style scoped>
-#chart {
-	margin-top: 3rem;
-}
+
 </style>

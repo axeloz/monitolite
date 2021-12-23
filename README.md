@@ -21,7 +21,13 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 
 ## Screenshot
 
+### Tasks list with quick preview
+
 ![screenshot](https://github.com/axeloz/monitolite/raw/main/screenshot.png "Logo")
+
+### Task details with graph and history
+
+![screenshot](https://github.com/axeloz/monitolite/raw/main/screenshot2.png "Logo")
 
 
 ## Requirements

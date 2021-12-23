@@ -1,5 +1,5 @@
 <template>
-	<div class="quick-view">
+	<div class="quick-view round">
 		<h3>
 			Quick overview
 		</h3>

@@ -90,6 +90,21 @@ html {
 			}
 		}
 
+		div.round {
+			-webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			-moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
+			border-radius: 5px;
+			position: relative;
+			background-color: white;
+			overflow: hidden;
+			margin-bottom: 3rem;
+
+			h3 {
+				margin-bottom: 1rem;
+			}
+		}
+
 
 		img {
 			vertical-align: sub;
@@ -133,13 +148,6 @@ html {
 
 
 		.quick-view {
-			-webkit-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-			-moz-box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-			box-shadow: 3px 3px 6px 0px rgba(0,0,0,0.3);
-			border-radius: 5px;
-			position: relative;
-			background-color: white;
-			overflow: hidden;
 
 			.new-group {
 				margin: .2rem;
