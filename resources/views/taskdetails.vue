@@ -29,7 +29,7 @@
 			<!-- History backlog -->
 			<div class="round">
 				<h3>Last {{ chart.days }} days history log</h3>
-				<div class="block-content" v-if="history.length > 0">
+				<div class="block-content" v-if="history">
 					<p><i>Showing only records where status has changed</i></p>
 					<table id="tasks_tbl">
 						<thead>
@@ -68,7 +68,7 @@
 			<!-- Notifications block -->
 			<div class="round">
 				<h3>Last {{ chart.days }} days notifications log</h3>
-				<div class="block-content" v-if="notifications.length > 0">
+				<div class="block-content" v-if="notifications">
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
@@ -112,6 +112,7 @@
 				history: null,
 				notifications: null,
 				refresh: null,
+				loader: null,
 
 				chart: {
 					render: false,
@@ -157,7 +158,7 @@
 						return 'unknown';
 				}
 			},
-			refreshTask: function() {
+			refreshTask: function(callback) {
 				this.$http.post('/api/getTask/'+this.task.id, {
 					days: this.chart.days
 				})
@@ -166,13 +167,18 @@
 					this.history 		= response.data.history
 					this.notifications	= response.data.notifications
 					this.refreshGraph(response.data.stats)
+					this.loader.hide()
 				})
-
-				if (this.refresh == null) {
-					this.refresh = window.setInterval(() => {
-						this.refreshTask()
-					}, 10000)
-				}
+				.then(() => {
+					if (this.refresh == null) {
+						this.refresh = window.setInterval(() => {
+							this.refreshTask()
+						}, 10000)
+					}
+				})
+				.then(() => {
+					this.loader.hide()
+				})
 			},
 			refreshGraph: function(stats) {
 				let xaxis = [];
@@ -221,6 +227,7 @@
 			},
 		},
 		mounted: function() {
+			this.loader = this.$loading.show()
 			this.task.id = this.$route.params.id ?? null
 
 			if (this.task.id != null) {

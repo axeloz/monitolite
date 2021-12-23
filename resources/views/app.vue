@@ -11,16 +11,18 @@
 
     import TaskList from './components/tasklist.vue'
     import QuickView from './components/quickview.vue'
-
     export default{
         components: {
             QuickView,
-            TaskList
+            TaskList,
         },
         data: function() {
             return {
                 refreshed_time: null,
-                refresh: null
+                refresh: null,
+                loading: true,
+                color: '#FF0000',
+                size: '10rem',
             }
         },
         computed: {
@@ -34,6 +36,7 @@
                 .then(response => this.$store.commit('setTasks', response.data))
                 .then(() => {
                     this.refreshed_time = this.moment();
+                    this.loading.hide()
                 })
                 .catch(error => window.alert('Cannot get tasks'))
                 this.refreshed_time = this.moment();
@@ -44,6 +47,7 @@
             next();
         },
         mounted: function() {
+            this.loading = this.$loading.show()
             this.getTasks()
             this.refresh = window.setInterval(() => {
                 this.getTasks();

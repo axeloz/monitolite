@@ -18,6 +18,20 @@ import VueApexCharts from 'vue-apexcharts'
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
 
+import VueLoading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+Vue.use(VueLoading, {
+    // Optional parameters
+    //container: this.fullPage ? null : this.$refs.formContainer,
+    canCancel: true,
+    backgroundColor: '#000',
+    color: '#0a9f9a',
+    width: 128,
+    height: 128,
+    opacity: 0.9,
+    loader: 'dots'
+})
+
 import Home from '../views/app.vue'
 import TaskDetails from '../views/taskdetails.vue'
 const router = new VueRouter({

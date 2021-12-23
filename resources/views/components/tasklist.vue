@@ -99,10 +99,14 @@ export default {
 			}
 		},
 		disableTask: function(task_id, current_status) {
+			//this.loading = this.$loading.show()
 			this.$http.patch('/api/toggleTaskStatus/'+task_id, {
 				active: + !current_status
 			})
-			.then(response => this.$store.commit('updateTask', response.data))
+			.then(response => {
+				this.$store.commit('updateTask', response.data)
+				//this.loading = this.$loading.hide()
+			})
 		}
 	}
 }
