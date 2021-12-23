@@ -104,11 +104,6 @@
 					fill: {
 						opacity: .9
 					},
-					legend: {
-						position: 'right',
-						offsetX: 0,
-						offsetY: 50
-					},
 				},
 			}
 		},
@@ -134,6 +129,12 @@
 					this.history = response.data.history
 					this.refreshGraph(response.data.stats)
 				})
+
+				if (this.refresh == null) {
+					this.refresh = window.setInterval(() => {
+						this.refreshTask()
+					}, 10000)
+				}
 			},
 			refreshGraph: function(stats) {
 				let xaxis = [];
@@ -157,9 +158,14 @@
 					},
 					chart: {
 						type: 'bar',
-						height: 300,
+						height: 350,
 						stacked: true,
 						stackType: '100%'
+					},
+					legend: {
+						position: 'right',
+						offsetX: 0,
+						offsetY: 50
 					},
 				}
 				this.series = [{
