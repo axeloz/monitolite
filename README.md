@@ -80,13 +80,13 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 
 ## TODO
 
- * Make CRUD possible from the backend for adding tasks and contacts
- * Multithreading
- * SMS Notifications
- * Protected backend with authentication
- * Create an installation script
- * Raise alert when tasks are not run at the correct frequency (CRON down or other reason)
- * Set a notification capping limit to prevent many notifications to be sent in case of an up-and-down host
- * Add a notification history log
- * Keep track of tasks response time
- * Daemonize the script (instead of CRONs)
+ [ ] Make CRUD possible from the backend for adding tasks and contacts
+ [ ] Multithreading
+ [ ] SMS Notifications
+ [ ] Protected backend with authentication
+ [ ] Create an installation script
+ [ ] Raise alert when tasks are not run at the correct frequency (CRON down or other reason)
+ [x] Set a notification capping limit to prevent many notifications to be sent in case of an up-and-down host
+ [x] Add a notification history log
+ [x] Keep track of tasks response time
+ [ ] Daemonize the script (instead of CRONs)

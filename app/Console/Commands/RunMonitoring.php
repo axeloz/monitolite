@@ -115,11 +115,11 @@ class RunMonitoring extends Command
 			try {
 				switch ($task->type) {
 					case 'ping':
-						$new_status = $this->checkPing($task);
+						$result = $this->checkPing($task);
 					break;
 
 					case 'http':
-						$new_status = $this->checkHttp($task);
+						$result = $this->checkHttp($task);
 					break;
 
 					default:
@@ -127,12 +127,14 @@ class RunMonitoring extends Command
 						continue 2;
 				}
 
-				$history = $this->saveHistory($task, true);
+				$new_status = 1;
+				$history = $this->saveHistory($task, true, 'success', $result['duration'] ?? null);
 			}
 			catch(MonitoringException $e) {
 				$history = $this->saveHistory($task, false, $e->getMessage());
 			}
 			catch(Exception $e) {
+				//TODO: handle system exception differently
 				$history = $this->saveHistory($task, false, $e->getMessage());
 			}
 			finally {
@@ -177,7 +179,7 @@ class RunMonitoring extends Command
 		}
     }
 
-	final private function saveHistory(Task $task, $status, $output = null) {
+	final private function saveHistory(Task $task, $status, $output = null, $duration = null) {
 		$date = date('Y-m-d H:i:s');
 
 		// Inserting new history
@@ -185,6 +187,7 @@ class RunMonitoring extends Command
 		$insert->status		= $status === true ? 1 : 0;
 		$insert->created_at	= $date;
 		$insert->output		= $output ?? '';
+		$insert->duration	= $duration;
 		$insert->task_id	= $task->id;
 		if (! $insert->save()) {
 			throw new Exception('Cannot insert history for task #'.$task->id);
@@ -254,6 +257,7 @@ class RunMonitoring extends Command
 
 		// Preparing cURL
 		$opts = [
+			CURLOPT_HEADER					=> true,
 			CURLOPT_HTTPGET					=> true,
 			CURLOPT_FRESH_CONNECT			=> true,
 			CURLOPT_PROTOCOLS				=> CURLPROTO_HTTP | CURLPROTO_HTTPS,
@@ -262,6 +266,7 @@ class RunMonitoring extends Command
 			CURLOPT_FOLLOWLOCATION			=> true,
 			CURLOPT_MAXREDIRS				=> 3,
 			CURLOPT_FAILONERROR				=> true,
+			CURLOPT_CONNECTTIMEOUT			=> 3,
 			CURLOPT_CONNECTTIMEOUT			=> 10,
 			CURLOPT_URL						=> trim($task->host)
 		];
@@ -269,16 +274,24 @@ class RunMonitoring extends Command
 		$ch = curl_init();
 		curl_setopt_array($ch, $opts);
 		if ($result = curl_exec($ch)) {
+			$duration = curl_getinfo($ch, CURLINFO_TOTAL_TIME);
 
 			// We have nothing to check into the page
 			// So for me, this is a big YES
 			if (empty($task->params)) {
-				return true;
+				return [
+					'result'	=> true,
+					'duration'	=> $duration
+				];
 			}
 			// We are looking for a string in the page
 			else {
 				if (strpos($result, $task->params) !== false) {
-					return true;
+					return [
+						'result'	=> true,
+						'output'	=> 'String was found in the page',
+						'duration'	=> $duration
+					];
 				}
 				else {
 					throw new MonitoringException('Cannot find the required string into the page');

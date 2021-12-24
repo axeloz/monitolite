@@ -34,9 +34,10 @@
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
-								<th width="20%">Date</th>
-								<th width="20%">Time</th>
+								<th width="10%">Date</th>
+								<th width="10%">Time</th>
 								<th width="*">Output</th>
+								<th width="10%">Duration</th>
 								<th width="10%">Status</th>
 							</tr>
 						</thead>
@@ -55,6 +56,7 @@
 										<i>No output</i>
 									</span>
 								</td>
+								<td>{{ h.duration }}s</td>
 								<td :class="statusText(h.status)">
 									<img :src="'/img/'+statusText(h.status)+'.svg'" width="16" alt="Status" />
 								</td>
