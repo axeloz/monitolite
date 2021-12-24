@@ -59,18 +59,21 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 * APP_DEBUG=false
 * APP_URL=http://localhost
 * APP_TIMEZONE=UTC
+* DB_TIMEZONE="+1:00"
 * DB_CONNECTION=mysql
 * DB_HOST=127.0.0.1
 * DB_PORT=3306
 * DB_DATABASE=homestead
 * DB_USERNAME=homestead
 * DB_PASSWORD=secret
-* SMTP_HOST=localhost
-* DMTP_USER=
-* SMTP_PASSWORD=
-* SMTP_PORT=25
-* SMTP_SSL=1
-* MAIL_FROM=axel@monitolite.fr
+* MAIL_MAILER=smtp
+* MAIL_HOST=localhost
+* MAIL_PORT=25
+* MAIL_USERNAME=
+* MAIL_PASSWORD=
+* MAIL_ENCRYPTION=
+* MAIL_FROM_ADDRESS=noreply@monitolite.fr
+* MAIL_FROM_NAME="Monitolite"
 * NB_TRIES=3
 * ARCHIVE_DAYS=10
 
