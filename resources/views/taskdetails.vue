@@ -56,7 +56,10 @@
 										<i>No output</i>
 									</span>
 								</td>
-								<td>{{ h.duration }}s</td>
+								<td>
+									<span v-if="h.duration != null">{{ h.duration+'s' }}</span>
+									<span v-else><i>No duration</i></span>
+								</td>
 								<td :class="statusText(h.status)">
 									<img :src="'/img/'+statusText(h.status)+'.svg'" width="16" alt="Status" />
 								</td>
