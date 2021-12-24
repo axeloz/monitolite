@@ -38,12 +38,16 @@
                     this.refreshed_time = this.moment();
                     this.loading.hide()
                 })
-                .catch(error => window.alert('Cannot get tasks'))
+                .catch(error => {
+                    this.loading.hide()
+                    clearTimeout(this.refresh)
+                    window.alert('An error occurred when getting tasks. Automatic refresh has been disabled. You should fix and reload this page.')
+                })
                 this.refreshed_time = this.moment();
             }
         },
         beforeRouteLeave(to, from, next) {
-            clearTimeout(this.refresh);
+            clearTimeout(this.refresh)
             next();
         },
         mounted: function() {
@@ -51,7 +55,7 @@
             this.getTasks()
             this.refresh = window.setInterval(() => {
                 this.getTasks();
-            }, 10000)
+            }, 60000)
         }
     }
 </script>
