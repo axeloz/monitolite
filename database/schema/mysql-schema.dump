@@ -78,6 +78,7 @@ CREATE TABLE `task_history` (
   `updated_at` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   PRIMARY KEY (`id`),
   KEY `task_id` (`task_id`),
+  KEY `status` (`status`,`created_at`) USING BTREE,
   CONSTRAINT `task_history_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -100,6 +101,7 @@ CREATE TABLE `tasks` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `host` (`host`,`type`),
   KEY `group_id_frgn` (`group_id`),
+  KEY `attempts` (`attempts`) USING BTREE,
   CONSTRAINT `group_id_frgn` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
