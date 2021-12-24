@@ -73,7 +73,7 @@ class ApiController extends Controller
 				->history()
 				->orderBy('created_at', 'desc')
 				->where('created_at', '>', $last_days->toDateString())
-				->selectRaw('id, date(created_at) as date, created_at, status, duration')
+				->selectRaw('id, date(created_at) as date, created_at, status, duration, output')
 				->get()
 			;
 
