@@ -10,7 +10,7 @@
 
 			Show:
 			<select
-				v-model="chart.days"
+				v-model="days"
 				@change="refreshTask"
 			>
 				<option value="7">7 days</option>
@@ -18,17 +18,27 @@
 				<option value="30">30 days</option>
 			</select>
 
-			<!-- Chart block -->
+			<!-- Uptime chart block -->
 			<div id="chart" class="round">
-				<h3>Uptime: past {{ chart.days }} days</h3>
+				<h3>Last {{ days }} days uptime</h3>
 				<div class="block-content">
-					<apexchart class="graph" v-if="chart.render" type="bar" height="350" :options="chartOptions" :series="series"></apexchart>
+					<apexchart class="graph" v-if="charts.uptime.render" type="bar" height="350" :options="charts.uptime.options" :series="charts.uptime.series"></apexchart>
 				</div>
 			</div>
 
+			<!-- Response time chart block -->
+			<div id="chart" class="round">
+				<h3>Last {{ days }} days response time</h3>
+				<div class="block-content">
+					<apexchart class="graph" v-if="charts.response.render" type="area" height="350" :options="charts.response.options" :series="charts.response.series"></apexchart>
+				</div>
+			</div>
+
+
+
 			<!-- History backlog -->
 			<div class="round">
-				<h3>Last {{ chart.days }} days history log</h3>
+				<h3>Last {{ days }} days history log</h3>
 				<div class="block-content" v-if="history">
 					<p><i>Showing only records where status has changed</i></p>
 					<table id="tasks_tbl">
@@ -72,7 +82,7 @@
 
 			<!-- Notifications block -->
 			<div class="round">
-				<h3>Last {{ chart.days }} days notifications log</h3>
+				<h3>Last {{ days }} days notifications log</h3>
 				<div class="block-content" v-if="notifications">
 					<table id="tasks_tbl">
 						<thead>
@@ -118,36 +128,68 @@
 				notifications: null,
 				refresh: null,
 				loader: null,
+				days: 15,
+				first_day: null,
 
-				chart: {
-					render: false,
-					days: 15
-				},
-
-				series: [{
-					data: []
-				}],
-				noData: {
-					text: 'Loading...'
-				},
-				chartOptions: {
-					responsive: [{
-						breakpoint: 480,
+				charts: {
+					uptime: {
+						render: false,
+						series: [{
+							data: []
+						}],
+						noData: {
+							text: 'Loading...'
+						},
 						options: {
-							legend: {
-								position: 'bottom',
-								offsetX: -10,
-								offsetY: 0
-							}
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									legend: {
+										position: 'bottom',
+										offsetX: -10,
+										offsetY: 0
+									}
+								}
+							}],
+							xaxis: {
+								categories: [],
+							},
+							fill: {
+								opacity: .9
+							},
+						},
+					},
+					response: {
+						render: true,
+						series: [{
+							data: [10, 20, 30]
+						}],
+						noData: {
+							text: 'Loading...'
+						},
+						options: {
+							responsive: [{
+								breakpoint: 480,
+								options: {
+									legend: {
+										position: 'bottom',
+										offsetX: -10,
+										offsetY: 0
+									}
+								}
+							}],
+							xaxis: {
+								categories: [
+									'oct', 'nov', 'dev'
+								],
+							},
+							fill: {
+								opacity: .9
+							},
 						}
-					}],
-					xaxis: {
-						categories: [],
-					},
-					fill: {
-						opacity: .9
-					},
-				},
+					}
+				}
+
 			}
 		},
 		methods: {
@@ -165,13 +207,15 @@
 			},
 			refreshTask: function(callback) {
 				this.$http.post('/api/getTask/'+this.task.id, {
-					days: this.chart.days
+					days: this.days
 				})
 				.then(response => {
 					this.task 			= response.data.task
 					this.history 		= response.data.history
+					this.first_day		= new Date(response.data.first_day).getTime();
 					this.notifications	= response.data.notifications
-					this.refreshGraph(response.data.stats)
+					this.refreshUptimeGraph(response.data.stats.uptime)
+					this.refreshResponseTimeGraph(response.data.stats.times)
 					this.loader.hide()
 				})
 				.then(() => {
@@ -185,24 +229,95 @@
 					this.loader.hide()
 				})
 			},
-			refreshGraph: function(stats) {
+			refreshResponseTimeGraph: function(stats) {
+				let data = [];
+				let xaxis = [];
+
+				for (let i in stats) {
+					xaxis.push(stats[i]['date'])
+					data.push(stats[i]['duration'])
+				}
+				console.log(xaxis)
+
+				this.charts.response.options = {
+					xaxis: {
+						//type: 'datetime',
+						//min: this.first_day,
+						categories: xaxis,
+						//tickAmount: 6,
+						labels: {
+							show: true,
+							rotate: -45,
+							//rotateAlways: true,
+						}
+					},
+					tooltip: {
+						x: {
+							format: "dd MMM yyyy"
+						}
+					},
+					chart: {
+						type: 'line',
+						height: 350,
+						stacked: false
+					},
+					legend: {
+						position: 'right',
+						offsetX: 0,
+						offsetY: 50
+					},
+					fill: {
+						colors: [function({ value, seriesIndex, w }) {
+							if(value < 1) {
+								return '#2acdc7'
+							}
+							else if (value >= 1 && value < 3) {
+								return '#e97a39'
+							}
+							else {
+								return '#e93949'
+							}
+						}],
+						type: "gradient",
+						gradient: {
+							shadeIntensity: 1,
+							opacityFrom: 0.7,
+							opacityTo: 0.9,
+							stops: [0, 100]
+						}
+					}
+				}
+				this.charts.response.series = [{
+					name: 'Response time',
+					data: data
+				}]
+			},
+			refreshUptimeGraph: function(stats) {
 				let xaxis = [];
 				let new_data_a = [];
 				let new_data_b = [];
 
 				for (let date in stats) {
-					xaxis.push(date)
+					xaxis.push(new Date(date).getTime())
 					new_data_a.push(stats[date]['up'])
 					new_data_b.push(stats[date]['down'])
 				}
 
-				this.chartOptions = {
+				this.charts.uptime.options = {
 					xaxis: {
+						type: 'datetime',
+						min: this.first_day,
 						categories: xaxis,
+						tickAmount: 6,
 						labels: {
 							show: true,
 							rotate: -45,
-							rotateAlways: true,
+							//rotateAlways: true,
+						}
+					},
+					tooltip: {
+						x: {
+							format: "yyyy MMM dd"
 						}
 					},
 					chart: {
@@ -217,7 +332,7 @@
 						offsetY: 50
 					},
 				}
-				this.series = [{
+				this.charts.uptime.series = [{
 					name: 'UP',
 					data: new_data_a,
 					color: '#00955c'
@@ -228,11 +343,11 @@
 					color: '#ef3232'
 				}]
 
-				this.chart.render = true
+				this.charts.uptime.render = true
 			},
 		},
 		mounted: function() {
-			this.loader = this.$loading.show()
+			//this.loader = this.$loading.show()
 			this.task.id = this.$route.params.id ?? null
 
 			if (this.task.id != null) {

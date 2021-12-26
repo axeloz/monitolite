@@ -67,21 +67,21 @@ class ApiController extends Controller
 		if (! is_null($task)) {
 			// First, we get the first date of the stats
 			// In this case, one month ago
-			$last_days = Carbon::now()->subDays($days);
+			$first_day = Carbon::now()->startOfDay()->subDays($days);
 			// Then we get all history for the past month
 			$history = $task
 				->history()
 				->orderBy('created_at', 'desc')
-				->where('created_at', '>', $last_days->toDateString())
+				->where('created_at', '>', $first_day->toDateString())
 				->selectRaw('id, date(created_at) as date, created_at, status, duration, output')
 				->get()
 			;
 
 			// Then we start building an array for the entire month
-			$stats = [];
+			$stats = $times = [];
 			$tmpdate = Carbon::now()->subDays($days);
 			do {
-				$stats[$tmpdate->toDateString()] = [
+				$stats['uptime'][$tmpdate->toDateString()] = [
 					'up'	=> 0,
 					'down'	=> 0
 				];
@@ -90,42 +90,46 @@ class ApiController extends Controller
 			while ($tmpdate->lt(Carbon::now()));
 
 			// Then we populate the stats data
+			$prev = null;
 			if (! is_null($history)) {
-				foreach ($history as $r) {
-					if (empty($stats[$r->date])) {
-						$stats[$r->date] = [
+				foreach ($history as $k => $r) {
+					if (empty($stats['uptime'][$r->date])) {
+						$stats['uptime'][$r->date] = [
 							'up'	=> 0,
 							'down'	=> 0
 						];
 					}
 
+					// Populating the stats
 					if ($r->status == 1) {
-						++$stats[$r->date]['up'];
+						++$stats['uptime'][$r->date]['up'];
 					}
 					else {
-						++$stats[$r->date]['down'];
+						++$stats['uptime'][$r->date]['down'];
 					}
-				}
-			}
 
-			// Then we populate the history data
-			if (! is_null($history)) {
-				$prev = null;
+					// Populating the response times
+					if ($r->status == 1) {
+						array_push($times, [
+							'date'		=> $r->created_at->toDateTimeString(),
+							'duration'	=> $r->duration ?? 0
+						]);
+					}
 
-				foreach ($history as $k => $h) {
 					// We only take tasks when status has changed between them
-					if (! is_null($prev) && $h->status == $prev) {
+					if (! is_null($prev) && $r->status == $prev) {
 						unset($history[$k]);
 					}
-					$prev = $h->status;
+					$prev = $r->status;
 				}
 			}
+			$stats['times'] = array_reverse($times);
 
 			// Getting the notifications sent
 			$notifications = $task
 				->notifications()
 				->with('contact')
-				->where('notifications.created_at', '>', $last_days->toDateString())
+				->where('notifications.created_at', '>', $first_day->toDateString())
 				->orderBy('notifications.created_at', 'desc')
 				->get()
 			;
@@ -134,7 +138,8 @@ class ApiController extends Controller
 				'task'				=> $task,
 				'stats'				=> $stats,
 				'history'			=> $history,
-				'notifications'		=> $notifications
+				'notifications'		=> $notifications,
+				'first_day'			=> $first_day->toDateTimeString()
 			]);
 		}
 	}
