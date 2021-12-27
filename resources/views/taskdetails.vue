@@ -30,7 +30,7 @@
 			<div id="chart" class="round">
 				<h3>Last {{ days }} days response time</h3>
 				<div class="block-content">
-					<apexchart class="graph" v-if="charts.response.render" type="area" height="350" :options="charts.response.options" :series="charts.response.series"></apexchart>
+					<apexchart class="graph" v-if="charts.response.render" type="line" height="350" :options="charts.response.options" :series="charts.response.series"></apexchart>
 				</div>
 			</div>
 
@@ -128,7 +128,7 @@
 				notifications: null,
 				refresh: null,
 				loader: null,
-				days: 15,
+				days: 7,
 				first_day: null,
 
 				charts: {
@@ -160,33 +160,7 @@
 						},
 					},
 					response: {
-						render: true,
-						series: [{
-							data: [10, 20, 30]
-						}],
-						noData: {
-							text: 'Loading...'
-						},
-						options: {
-							responsive: [{
-								breakpoint: 480,
-								options: {
-									legend: {
-										position: 'bottom',
-										offsetX: -10,
-										offsetY: 0
-									}
-								}
-							}],
-							xaxis: {
-								categories: [
-									'oct', 'nov', 'dev'
-								],
-							},
-							fill: {
-								opacity: .9
-							},
-						}
+						render: false,
 					}
 				}
 
@@ -233,22 +207,32 @@
 				let data = [];
 				let xaxis = [];
 
-				for (let i in stats) {
-					xaxis.push(stats[i]['date'])
-					data.push(stats[i]['duration'])
+				for (let date in stats) {
+					xaxis.push(new Date(date).getTime())
+
+					if (stats[date]['count'] > 0) {
+						data.push(Math.round( (stats[date]['duration'] / stats[date]['count']) * 100) / 100)
+					}
+					else {
+						data.push(0)
+					}
 				}
-				console.log(xaxis)
 
 				this.charts.response.options = {
 					xaxis: {
-						//type: 'datetime',
+						type: 'datetime',
 						//min: this.first_day,
 						categories: xaxis,
-						//tickAmount: 6,
 						labels: {
 							show: true,
 							rotate: -45,
-							//rotateAlways: true,
+						}
+					},
+					yaxis: {
+						labels: {
+							formatter: function (value) {
+								return (Math.round(value * 100) / 100) + "s";
+							}
 						}
 					},
 					tooltip: {
@@ -266,6 +250,13 @@
 						offsetX: 0,
 						offsetY: 50
 					},
+					dataLabels: {
+						enabled: true,
+					},
+					colors: ['#00955c'],
+					stroke: {
+						curve: 'smooth',
+					},
 					fill: {
 						colors: [function({ value, seriesIndex, w }) {
 							if(value < 1) {
@@ -278,7 +269,7 @@
 								return '#e93949'
 							}
 						}],
-						type: "gradient",
+						type: "solid",
 						gradient: {
 							shadeIntensity: 1,
 							opacityFrom: 0.7,
@@ -291,6 +282,8 @@
 					name: 'Response time',
 					data: data
 				}]
+
+				this.charts.response.render = true
 			},
 			refreshUptimeGraph: function(stats) {
 				let xaxis = [];
@@ -313,6 +306,13 @@
 							show: true,
 							rotate: -45,
 							//rotateAlways: true,
+						}
+					},
+					yaxis: {
+						labels: {
+							formatter: function (value) {
+								return value + "%";
+							}
 						}
 					},
 					tooltip: {

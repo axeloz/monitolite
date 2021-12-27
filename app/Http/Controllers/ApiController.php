@@ -85,6 +85,12 @@ class ApiController extends Controller
 					'up'	=> 0,
 					'down'	=> 0
 				];
+
+				$stats['times'][$tmpdate->toDateString()] = [
+					'duration'	=> 0,
+					'count'		=> 0
+				];
+
 				$tmpdate = $tmpdate->addDay();
 			}
 			while ($tmpdate->lt(Carbon::now()));
@@ -110,10 +116,11 @@ class ApiController extends Controller
 
 					// Populating the response times
 					if ($r->status == 1) {
-						array_push($times, [
-							'date'		=> $r->created_at->toDateTimeString(),
-							'duration'	=> $r->duration ?? 0
-						]);
+						// array_push($stats['times'][$r->date], [
+						// 	'durations' => $r->duration
+						// ]);
+						$stats['times'][$r->date]['duration'] += $r->duration;
+						$stats['times'][$r->date]['count'] ++;
 					}
 
 					// We only take tasks when status has changed between them
@@ -123,7 +130,6 @@ class ApiController extends Controller
 					$prev = $r->status;
 				}
 			}
-			$stats['times'] = array_reverse($times);
 
 			// Getting the notifications sent
 			$notifications = $task
