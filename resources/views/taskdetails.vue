@@ -349,7 +349,7 @@
 			},
 		},
 		mounted: function() {
-			//this.loader = this.$loading.show()
+			this.loader = this.$loading.show()
 			this.task.id = this.$route.params.id ?? null
 
 			if (this.task.id != null) {
