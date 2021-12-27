@@ -98,6 +98,8 @@ class ApiController extends Controller
 			// Then we populate the stats data
 			$prev = null;
 			if (! is_null($history)) {
+				$history = $history->reverse();
+
 				foreach ($history as $k => $r) {
 					if (empty($stats['uptime'][$r->date])) {
 						$stats['uptime'][$r->date] = [
@@ -116,9 +118,6 @@ class ApiController extends Controller
 
 					// Populating the response times
 					if ($r->status == 1) {
-						// array_push($stats['times'][$r->date], [
-						// 	'durations' => $r->duration
-						// ]);
 						$stats['times'][$r->date]['duration'] += $r->duration;
 						$stats['times'][$r->date]['count'] ++;
 					}
