@@ -258,23 +258,29 @@
 						curve: 'smooth',
 					},
 					fill: {
-						colors: [function({ value, seriesIndex, w }) {
-							if(value < 1) {
-								return '#2acdc7'
-							}
-							else if (value >= 1 && value < 3) {
-								return '#e97a39'
-							}
-							else {
-								return '#e93949'
-							}
-						}],
-						type: "solid",
+						type: 'gradient',
 						gradient: {
+							shade: 'dark',
 							shadeIntensity: 1,
-							opacityFrom: 0.7,
-							opacityTo: 0.9,
-							stops: [0, 100]
+							type: 'vertical',
+							opacityFrom: 1,
+							opacityTo: 1,
+							colorStops: [
+							{
+								offset: 0,
+								color: "#EB656F",
+								opacity: 1
+							},
+							{
+								offset: 20,
+								color: "#FAD375",
+								opacity: 1
+							},
+							{
+								offset: 40,
+								color: "#61DBC3",
+								opacity: 1
+							}]
 						}
 					}
 				}
