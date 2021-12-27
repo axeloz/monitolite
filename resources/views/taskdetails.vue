@@ -260,17 +260,12 @@
 					fill: {
 						type: 'gradient',
 						gradient: {
-							shade: 'dark',
+							//shade: 'dark',
 							shadeIntensity: 1,
 							type: 'vertical',
 							opacityFrom: 1,
 							opacityTo: 1,
 							colorStops: [
-							{
-								offset: 0,
-								color: "#EB656F",
-								opacity: 1
-							},
 							{
 								offset: 20,
 								color: "#FAD375",
@@ -280,7 +275,8 @@
 								offset: 40,
 								color: "#61DBC3",
 								opacity: 1
-							}]
+							}
+							]
 						}
 					}
 				}
