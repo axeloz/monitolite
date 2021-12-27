@@ -117,7 +117,7 @@ class ApiController extends Controller
 					}
 
 					// Populating the response times
-					if ($r->status == 1) {
+					if ($r->status == 1 && $r->duration > 0) {
 						$stats['times'][$r->date]['duration'] += $r->duration;
 						$stats['times'][$r->date]['count'] ++;
 					}
