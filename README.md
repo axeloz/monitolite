@@ -9,6 +9,7 @@ I figured it could be useful for others so I **rewrote** and **updated** it from
 **MonitoLite** is a very simple monitoring tool developed in PHP powered by Lumen (by Laravel). It supports :
  * **ping monitoring**: sends a `ping` command to the specified host. Raises an alert if the host is down
  * **http monitoring**: requests the provided URL and raises an alert if the URL returns an error. Optionally you may specify a string to search on the page using the `param` database field. It raises an alert if the specified text could not be found on the page.
+ * **ping monitoring**: connects to the provided FTP server as anonymous (authentication not supported yet).
 
  In case of an alert, the script sends an email notifications to the specified contacts (one or many).
  The script also sends a recovery email notification when the alert is over.
