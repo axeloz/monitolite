@@ -19,6 +19,10 @@ Tested on MySQL only but should support other SQL-based DBMS.
 It comes with a very straightforward dashboard written in PHP. This is **optional**, the monitoring script runs as standalone.
 **Caution**: the backend is not password-protected. You should make sure you add your own security layer via IP filtering or basic authentication.
 
+## Demo
+
+(DEMO)[https://monitolite.mabox.eu]
+
 ## Screenshot
 
 ### Tasks list with quick preview
