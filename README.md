@@ -46,9 +46,9 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
  * create your own `.env` file: `cp .env.example .env` and adapt it to your needs
  * create a webserver vhost with document root to the `public` directory
  * add tasks and contacts into the database (no GUI for CRUD yet)
- * run the script: `cd /var/www/<your-path> && php artisan monitolite:monitoring:run`
+ * run the script: `cd /var/www/<your-path> && php artisan monitolite:run`
  * check the output of the command for results.
- * if everything works, you may create a CRON `* * * * * cd /var/www/<your-path> && php artisan monitolite:monitoring:run > /dev/null`
+ * if everything works, you may create a CRON `* * * * * cd /var/www/<your-path> && php artisan monitolite:run > /dev/null`
 
 
 ## Settings
