@@ -146,7 +146,7 @@ class SyncCustomers extends Command
 				if (false === array_search($t->host, $hosts)) {
 					// Must delete task
 					//$this->line('must delete '.$t->host);
-					app('db')->delete('DELETE FROM `tasks` WHERE host = ?', [$t->host]);
+					//app('db')->delete('DELETE FROM `tasks` WHERE host = ?', [$t->host]);
 				}
 			}
 			$bar->finish();
