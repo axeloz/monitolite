@@ -39,14 +39,13 @@
 							</td>
 							<td>
 								<img :src="'/img/'+task.type+'.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
-								{{ task.type }}
+								{{ task.type.toUpperCase() }}
 							</td>
 							<td>
 								<span
 									v-if="task.executed_at"
 								>
 									{{ moment(task.executed_at).fromNow() }}
-									<img src="/img/info.svg" alt="Infos" width="16" :title="'Result: '+task.output" />
 								</span>
 								<span
 									v-else

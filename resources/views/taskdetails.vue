@@ -13,6 +13,7 @@
 				v-model="days"
 				@change="refreshTask"
 			>
+				<option value="3">3 days</option>
 				<option value="7">7 days</option>
 				<option value="15">15 days</option>
 				<option value="30">30 days</option>
@@ -46,11 +47,11 @@
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
+								<th width="10%">Status</th>
 								<th width="10%">Date</th>
 								<th width="10%">Time</th>
 								<th width="*">Output</th>
 								<th width="10%">Duration</th>
-								<th width="10%">Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -58,6 +59,9 @@
 								v-for="h in history"
 								v-bind:key="h.id"
 							>
+								<td :class="statusText(h.status)">
+									<img :src="'/img/'+statusText(h.status)+'.svg'" width="16" alt="Status" />
+								</td>
 								<td>{{ moment(h.created_at).format('YYYY-MM-DD') }}</td>
 								<td>{{ moment(h.created_at).format('HH:mm:ss') }}</td>
 								<td>
@@ -71,9 +75,6 @@
 								<td>
 									<span v-if="h.duration != null">{{ h.duration+'s' }}</span>
 									<span v-else><i>No duration</i></span>
-								</td>
-								<td :class="statusText(h.status)">
-									<img :src="'/img/'+statusText(h.status)+'.svg'" width="16" alt="Status" />
 								</td>
 							</tr>
 						</tbody>
@@ -132,7 +133,7 @@
 				notifications: null,
 				refresh: null,
 				loader: null,
-				days: 7,
+				days: 3,
 				first_day: null,
 
 				charts: {
