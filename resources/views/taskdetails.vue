@@ -189,7 +189,11 @@
 					this.first_day		= new Date(response.data.first_day).getTime();
 					this.notifications	= response.data.notifications
 					this.refreshUptimeGraph(response.data.stats.uptime)
-					this.refreshResponseTimeGraph(response.data.stats.times)
+
+					if (this.task.type == 'http') {
+						this.refreshResponseTimeGraph(response.data.stats.times)
+					}
+
 					this.loader.hide()
 				})
 				.then(() => {
