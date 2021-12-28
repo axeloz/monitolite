@@ -126,9 +126,13 @@ class RunMonitoring extends Command
 						$result = $this->checkRequest($task, CURLPROTO_FTP | CURLPROTO_FTPS);
 					break;
 
+					case 'dns':
+						$result = $this->checkDns($task);
+					break;
+
 					default:
 						// Nothing to do here
-						continue 2;
+						throw new Exception('Unknown type "'.$task->type.'"');
 				}
 
 				$new_status = 1;
@@ -139,7 +143,8 @@ class RunMonitoring extends Command
 			}
 			catch(Exception $e) {
 				//TODO: handle system exception differently
-				$history = $this->saveHistory($task, false, $e->getMessage());
+				//$history = $this->saveHistory($task, false, $e->getMessage());
+				$this->error($e->getMessage());
 			}
 			finally {
 				// Changing task timestamps and status
@@ -251,6 +256,30 @@ class RunMonitoring extends Command
 			}
 		}
 		// Else everything is fine
+		return true;
+	}
+
+	final private function checkDns(Task $task) {
+		if (! function_exists('exec') || ! is_callable('exec')) {
+			throw new MonitoringException('The "exec" command is required');
+		}
+
+		if (is_null($task->params) || empty($task->params)) {
+			throw new Exception('Params are required');
+		}
+
+		$cmd = 'nslookup '.trim($task->params).' '.$task->host;
+
+		// If command failed
+		if (false === $exec = exec($cmd.' '.$task->host, $output, $code)) {
+			throw new MonitoringException('Unable to execute DNS lookup');
+		}
+
+		// If command returned a non-zero code
+		if ($code > 0) {
+			throw new MonitoringException('DNS lookup task failed ('.$exec.')');
+		}
+
 		return true;
 	}
 
