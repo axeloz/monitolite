@@ -17,7 +17,7 @@
 						<tr>
 							<th width="5%">Up?</th>
 							<th width="*">Host</th>
-							<th width="5%">Type</th>
+							<th width="10%">Type</th>
 							<th width="20%">Last checked</th>
 							<th width="13%">Frequency (min)</th>
 							<th width="5%">Active</th>
@@ -39,6 +39,7 @@
 							</td>
 							<td>
 								<img :src="'/img/'+task.type+'.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
+								{{ task.type }}
 							</td>
 							<td>
 								<span
