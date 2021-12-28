@@ -73,6 +73,7 @@ CREATE TABLE `task_history` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `status` int unsigned NOT NULL,
   `output` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `duration` float(5,3) unsigned DEFAULT NULL,
   `task_id` int unsigned NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
