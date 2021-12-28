@@ -134,30 +134,6 @@
 				charts: {
 					uptime: {
 						render: false,
-						series: [{
-							data: []
-						}],
-						noData: {
-							text: 'Loading...'
-						},
-						options: {
-							responsive: [{
-								breakpoint: 480,
-								options: {
-									legend: {
-										position: 'bottom',
-										offsetX: -10,
-										offsetY: 0
-									}
-								}
-							}],
-							xaxis: {
-								categories: [],
-							},
-							fill: {
-								opacity: .9
-							},
-						},
 					},
 					response: {
 						render: false,
@@ -297,9 +273,17 @@
 				let new_data_b = [];
 
 				for (let date in stats) {
+					let total = stats[date]['up'] + stats[date]['down']
+
 					xaxis.push(new Date(date).getTime())
-					new_data_a.push(stats[date]['up'])
-					new_data_b.push(stats[date]['down'])
+					if (total > 0) {
+						new_data_a.push( stats[date]['up'] / total * 100 )
+						new_data_b.push( stats[date]['down'] / total * 100 )
+					}
+					else {
+						new_data_a.push( 0 )
+						new_data_b.push( 0 )
+					}
 				}
 
 				this.charts.uptime.options = {
@@ -311,7 +295,6 @@
 						labels: {
 							show: true,
 							rotate: -45,
-							//rotateAlways: true,
 						}
 					},
 					yaxis: {
