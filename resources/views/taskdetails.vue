@@ -277,8 +277,8 @@
 
 					xaxis.push(new Date(date).getTime())
 					if (total > 0) {
-						new_data_a.push( stats[date]['up'] / total * 100 )
-						new_data_b.push( stats[date]['down'] / total * 100 )
+						new_data_a.push( Math.round(stats[date]['up'] / total * 100) )
+						new_data_b.push( Math.round(stats[date]['down'] / total * 100) )
 					}
 					else {
 						new_data_a.push( 0 )
