@@ -119,7 +119,11 @@ class RunMonitoring extends Command
 					break;
 
 					case 'http':
-						$result = $this->checkHttp($task);
+						$result = $this->checkRequest($task, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+					break;
+
+					case 'ftp':
+						$result = $this->checkRequest($task, CURLPROTO_FTP | CURLPROTO_FTPS);
 					break;
 
 					default:
@@ -250,17 +254,19 @@ class RunMonitoring extends Command
 		return true;
 	}
 
-	final private function checkHttp(Task $task) {
+	final private function checkRequest(Task $task, $protocol = CURLPROTO_HTTP | CURLPROTO_HTTPS) {
 		if (app()->environment() == 'local') {
 			//throw new MonitoringException('Forcing error for testing');
 		}
+
+
 
 		// Preparing cURL
 		$opts = [
 			CURLOPT_HEADER					=> true,
 			CURLOPT_HTTPGET					=> true,
 			CURLOPT_FRESH_CONNECT			=> true,
-			CURLOPT_PROTOCOLS				=> CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_PROTOCOLS				=> $protocol,
 			CURLOPT_SSL_VERIFYHOST			=> 2,
 			CURLOPT_RETURNTRANSFER			=> true,
 			CURLOPT_FOLLOWLOCATION			=> true,

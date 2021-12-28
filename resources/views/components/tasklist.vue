@@ -38,7 +38,7 @@
 								<a :href="task.host" target="_blank">{{ task.host }}</a>
 							</td>
 							<td>
-								<img :src="task.type == 'http' ? '/img/http.svg' : '/img/ping.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
+								<img :src="'/img/'+task.type+'.svg'" width="16" alt="Type of check" :title="'Type: '+task.type" />
 							</td>
 							<td>
 								<span
@@ -83,7 +83,7 @@ export default {
 	computed: {
 		tasks: function() {
 			return this.$store.state.tasks
-		}
+		},
 	},
 	methods: {
 		statusText: function (status) {
