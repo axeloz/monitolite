@@ -27,7 +27,7 @@
 			</div>
 
 			<!-- Response time chart block -->
-			<div id="chart" class="round">
+			<div id="chart" class="round" v-if="task.type == 'http'">
 				<h3>Last {{ days }} days response time</h3>
 				<div class="block-content">
 					<apexchart class="graph" v-if="charts.response.render" type="line" height="350" :options="charts.response.options" :series="charts.response.series"></apexchart>
