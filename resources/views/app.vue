@@ -34,16 +34,15 @@
             getTasks: function() {
                 this.$http.get('/api/getTasks')
                 .then(response => this.$store.commit('setTasks', response.data))
-                .then(() => {
-                    this.refreshed_time = this.moment();
-                    this.loading.hide()
-                })
                 .catch(error => {
                     this.loading.hide()
                     clearTimeout(this.refresh)
                     window.alert('An error occurred when getting tasks. Automatic refresh has been disabled. You should fix and reload this page.')
                 })
-                this.refreshed_time = this.moment();
+                .then(() => {
+                    this.refreshed_time = this.moment();
+                    this.loading.hide()
+                })
             }
         },
         beforeRouteLeave(to, from, next) {

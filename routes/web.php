@@ -13,10 +13,10 @@
 |
 */
 
-$router->group(['prefix' => 'api/'], function () use ($router) {
-    $router->get('getTasks/',  ['uses' => 'ApiController@getTasks']);
-    $router->post('getTask/{id}',  ['uses' => 'ApiController@getTaskDetails']);
-    $router->patch('toggleTaskStatus/{id}',  ['uses' => 'ApiController@toggleTaskStatus']);
+$router->group(['prefix' => '/api'], function () use ($router) {
+    $router->get('/getTasks/',  ['uses' => 'ApiController@getTasks']);
+    $router->post('/getTask/{id}',  ['uses' => 'ApiController@getTaskDetails']);
+    $router->patch('/toggleTaskStatus/{id}',  ['uses' => 'ApiController@toggleTaskStatus']);
 });
 
 $router->get('/{route:.*}/', function () {

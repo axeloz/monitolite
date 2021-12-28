@@ -61,7 +61,7 @@ class ApiController extends Controller
 		$days = ($request->input('days', 15) - 1);
 
 		$task = Task::with(['group'])
-			->find($id)
+			->findOrFail($id)
 		;
 
 		if (! is_null($task)) {

@@ -179,6 +179,9 @@
 						}, 10000)
 					}
 				})
+				.catch(error => {
+					//TODO: do something
+				})
 				.then(() => {
 					this.loader.hide()
 				})
