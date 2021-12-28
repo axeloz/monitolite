@@ -21,7 +21,7 @@ It comes with a very straightforward dashboard written in PHP. This is **optiona
 
 ## Demo
 
-(DEMO)[https://monitolite.mabox.eu]
+[DEMO](https://monitolite.mabox.eu)
 
 ## Screenshot
 
