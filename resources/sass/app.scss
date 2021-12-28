@@ -111,41 +111,48 @@ html {
 		}
 
 		table {
-				border: 1px solid #ABC;
-				font-size: 14px;
-				border-spacing : 0;
-				border-collapse : collapse;
+			border: 1px solid #ABC;
+			font-size: 14px;
+			border-spacing : 0;
+			border-collapse : collapse;
 
-				th {
-					background-color: #e6EEEE;
-					border: 1px solid #9ccece;
-					padding: 0.3rem;
+			th {
+				background-color: #e6EEEE;
+				border: 1px solid #9ccece;
+				padding: 0.3rem;
 
-				}
+			}
 
-				td {
-					color: #3D3D3D;
-					padding: 0.3rem;
-					background-color: #FFF;
-					border: 1px solid #9ccece;
-					text-align: center;
+			td {
+				color: #3D3D3D;
+				padding: 0.3rem;
+				background-color: #FFF;
+				border: 1px solid #9ccece;
+				text-align: center;
+				vertical-align: middle;
+
+				img {
 					vertical-align: middle;
-
-					img {
-						vertical-align: middle;
-					}
-
-					&.right {
-						text-align: right;
-					}
 				}
 
-				&#tasks_tbl, &#contacts_tbl {
-					width: 100%;
+				&.right {
+					text-align: right;
 				}
+			}
+
+			&#tasks_tbl, &#contacts_tbl {
+				width: 100%;
+			}
+
 		}
 
-
+		.no-data {
+			text-align: center;
+			font-style: italic;
+			margin-bottom: 1.3rem;
+			font-size: .9rem;
+			color: #727272;
+		}
 
 		.quick-view {
 

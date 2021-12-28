@@ -23,6 +23,7 @@
 				<h3>Last {{ days }} days uptime</h3>
 				<div class="block-content">
 					<apexchart class="graph" v-if="charts.uptime.render" type="bar" height="350" :options="charts.uptime.options" :series="charts.uptime.series"></apexchart>
+					<p class="no-data" v-else>No chart to display here</p>
 				</div>
 			</div>
 
@@ -31,6 +32,7 @@
 				<h3>Last {{ days }} days response time</h3>
 				<div class="block-content">
 					<apexchart class="graph" v-if="charts.response.render" type="line" height="350" :options="charts.response.options" :series="charts.response.series"></apexchart>
+					<p class="no-data" v-else>No chart to display here</p>
 				</div>
 			</div>
 
@@ -39,7 +41,7 @@
 			<!-- History backlog -->
 			<div class="round">
 				<h3>Last {{ days }} days history log</h3>
-				<div class="block-content" v-if="history">
+				<div class="block-content" v-if="history && Object.keys(history).length > 0">
 					<p><i>Showing only records where status has changed</i></p>
 					<table id="tasks_tbl">
 						<thead>
@@ -77,21 +79,22 @@
 						</tbody>
 					</table>
 				</div>
-				<p v-else><center>No history to display here</center></p>
+				<p class="no-data" v-else>No history to display here</p>
 			</div>
 
 			<!-- Notifications block -->
 			<div class="round">
 				<h3>Last {{ days }} days notifications log</h3>
-				<div class="block-content" v-if="notifications">
+				<div class="block-content" v-if="notifications && Object.keys(notifications).length > 0">
 					<table id="tasks_tbl">
 						<thead>
 							<tr>
-								<th width="20%">Date</th>
-								<th width="20%">Time</th>
-								<th width="*">Firstname</th>
-								<th width="10%">Lastname</th>
-								<th width="10%">Email</th>
+								<th width="10%">Date</th>
+								<th width="10%">Time</th>
+								<th width="15">Firstname</th>
+								<th width="15%">Lastname</th>
+								<th width="30%">Email</th>
+								<th width="10%">Type</th>
 								<th width="10%">Status</th>
 							</tr>
 						</thead>
@@ -105,12 +108,13 @@
 								<td>{{ n.contact.firstname }}</td>
 								<td>{{ n.contact.surname }}</td>
 								<td>{{ n.contact.email }}</td>
-								<td>{{ n.status }}</td>
+								<td>{{ n.task_history.status == 1 ? 'UP' : 'DOWN' }}</td>
+								<td>{{ n.status.toUpperCase() }}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-				<p v-else><center>No notification to display here</center></p>
+				<p class="no-data" v-else>No notification to display here</p>
 			</div>
 		</div>
 	</div>

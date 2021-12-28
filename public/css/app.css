@@ -111,6 +111,13 @@ html body table td.right {
 html body table#tasks_tbl, html body table#contacts_tbl {
   width: 100%;
 }
+html body .no-data {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 1.3rem;
+  font-size: 0.9rem;
+  color: #727272;
+}
 html body .quick-view .new-group {
   margin: 0.2rem;
   display: inline-block;

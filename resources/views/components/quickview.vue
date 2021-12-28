@@ -5,7 +5,7 @@
 		</h3>
 		<div class="block-content">
 			<div
-				v-if="1 == 1"
+				v-if="tasks && Object.keys(tasks).length > 0"
 			>
 				<div
 					v-for="group in tasks"
@@ -28,9 +28,10 @@
 				<p class="spacer">&nbsp;</p>
 			</div>
 			<div
+				class="no-data"
 				v-else
 			>
-				<center>Sorry, there is no task here.</center>
+				Sorry, there is no task here.
 
 			</div>
 		</div>

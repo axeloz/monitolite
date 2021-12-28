@@ -133,7 +133,7 @@ class ApiController extends Controller
 			// Getting the notifications sent
 			$notifications = $task
 				->notifications()
-				->with('contact')
+				->with(['contact', 'task_history'])
 				->where('notifications.created_at', '>', $first_day->toDateString())
 				->orderBy('notifications.created_at', 'desc')
 				->get()
