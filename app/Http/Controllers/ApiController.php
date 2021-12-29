@@ -26,13 +26,13 @@ class ApiController extends Controller
 
 		$query = Task
 			::leftJoin('groups', 'groups.id', 'tasks.group_id')
-			->leftJoin('task_history', 'task_id', 'task_history.id')
 			->select(
 				'tasks.id', 'tasks.host', 'tasks.status', 'tasks.type', 'tasks.params', 'tasks.frequency', 'tasks.created_at', 'tasks.executed_at', 'tasks.active', 'tasks.group_id',
-				'task_history.output',
 				'groups.name as group_name')
 			->get()
 		;
+
+		//dd($query->toSql());
 
 		foreach ($query as $t) {
 			if (is_null($t->group_id)) {
