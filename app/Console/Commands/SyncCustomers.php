@@ -114,7 +114,7 @@ class SyncCustomers extends Command
 						'type'					=> 'http',
 						'params'				=> 'restovisio.com',
 						'creation_date'			=> date('Y-m-d H:i:s'),
-						'frequency'				=> 600,
+						'frequency'				=> 3600,
 						'active'				=> 1,
 						'group_id'				=> $c->id
 					]);
